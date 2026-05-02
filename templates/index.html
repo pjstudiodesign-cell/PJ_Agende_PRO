@@ -5,36 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PJ AGENDE PRO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #0a0a0a;
+            --primary: #0d0d0d;
+            --purple-dark: #1a0a2e;
+            --purple-mid: #2d1b4e;
+            --purple-light: #6b3fa0;
             --accent: #d4af37;
-            --card-bg: #1e1e1e;
+            --accent-light: #f0d060;
+            --card-bg: #1a1025;
             --text: #ffffff;
             --success: #25d366;
+            --border: rgba(212,175,55,0.3);
         }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: #121212;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #0d0d0d 0%, #1a0a2e 50%, #0d0d0d 100%);
+            min-height: 100vh;
             color: var(--text);
-            margin: 0;
-            padding-bottom: 150px;
+            padding-bottom: 160px;
         }
 
+        /* HEADER COM LOGO */
         header {
-            background: var(--primary);
-            padding: 35px;
+            background: linear-gradient(180deg, #0a0015 0%, #1a0a2e 100%);
+            padding: 25px 20px 30px;
             text-align: center;
-            border-bottom: 4px solid var(--accent);
+            border-bottom: 3px solid var(--accent);
+            box-shadow: 0 4px 30px rgba(107,63,160,0.4);
+            position: relative;
         }
 
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo-img {
+            width: 90px;
+            height: 90px;
+            border-radius: 20px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px rgba(212,175,55,0.4), 0 0 40px rgba(107,63,160,0.3);
+        }
+
+        .header-text h1 {
+            color: var(--accent);
+            font-size: 2.6rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            text-shadow: 0 0 20px rgba(212,175,55,0.5);
+            line-height: 1;
+        }
+
+        .header-text p {
+            color: rgba(255,255,255,0.7);
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: 0.85rem;
+            margin-top: 6px;
+        }
+
+        .header-badge {
+            background: linear-gradient(135deg, var(--purple-light), var(--accent));
+            color: black;
+            font-size: 0.7rem;
+            font-weight: 900;
+            padding: 4px 12px;
+            border-radius: 20px;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        /* CONTAINER */
         .container {
             max-width: 1100px;
             margin: auto;
-            padding: 20px;
+            padding: 30px 20px;
+        }
+
+        /* TÍTULO DA SEÇÃO */
+        .section-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title h2 {
+            color: var(--accent);
+            font-size: 1rem;
+            letter-spacing: 4px;
+            font-weight: 700;
+            opacity: 0.8;
         }
 
         /* BOTÕES DE FILTRO */
@@ -47,41 +116,57 @@
         }
 
         .filter-btn {
-            background: var(--card-bg);
-            color: white;
-            border: 2px solid #444;
-            padding: 20px 30px;
-            border-radius: 15px;
+            background: var(--purple-dark);
+            color: rgba(255,255,255,0.7);
+            border: 2px solid rgba(107,63,160,0.4);
+            padding: 16px 28px;
+            border-radius: 50px;
             cursor: pointer;
             font-weight: 900;
-            font-size: 1.3rem;
+            font-size: 1rem;
             text-transform: uppercase;
+            letter-spacing: 2px;
             flex: 1;
-            min-width: 120px;
-            transition: 0.3s;
+            min-width: 130px;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--purple-light);
+            color: white;
+            transform: translateY(-2px);
         }
 
         .filter-btn.active {
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--purple-light), var(--accent));
             color: black;
             border-color: var(--accent);
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 5px 25px rgba(212,175,55,0.35), 0 0 15px rgba(107,63,160,0.4);
+            transform: translateY(-2px);
         }
 
         /* GRID E CARDS */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            gap: 25px;
         }
 
         .card {
-            background: var(--card-bg);
+            background: linear-gradient(145deg, #1a1025, #0f0820);
             border-radius: 20px;
             overflow: hidden;
-            border: 1px solid #333;
+            border: 1px solid rgba(107,63,160,0.3);
             display: none;
-            transition: 0.4s;
+            transition: all 0.4s;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 40px rgba(212,175,55,0.15), 0 0 20px rgba(107,63,160,0.2);
         }
 
         .card.visible {
@@ -89,51 +174,77 @@
             animation: fadeIn 0.5s ease;
         }
 
+        .card-img-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
         .card-img {
             width: 100%;
-            height: 280px;
+            height: 260px;
             object-fit: cover;
-            border-bottom: 4px solid var(--accent);
-            background: #2a2a2a;
+            border-bottom: 3px solid var(--accent);
+            transition: transform 0.4s;
+        }
+
+        .card:hover .card-img {
+            transform: scale(1.05);
         }
 
         .card-content {
-            padding: 30px;
+            padding: 25px;
             text-align: center;
         }
 
         .card-nome {
-            margin: 0;
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             color: var(--accent);
             text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .card-desc {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+            margin-bottom: 12px;
         }
 
         .price {
-            color: var(--accent);
-            font-size: 2.2rem;
+            color: var(--accent-light);
+            font-size: 2rem;
             font-weight: 900;
-            margin: 15px 0;
+            margin: 12px 0 20px;
+            text-shadow: 0 0 15px rgba(212,175,55,0.3);
         }
 
         /* BOTÃO SELECIONAR */
         .btn-select {
-            background: var(--accent);
-            color: black;
-            padding: 20px;
+            background: linear-gradient(135deg, var(--purple-light), #8b5cf6);
+            color: white;
+            padding: 16px;
             border-radius: 12px;
             border: none;
             width: 100%;
             font-weight: 900;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1rem;
             text-transform: uppercase;
-            transition: 0.3s;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 4px 15px rgba(107,63,160,0.4);
+        }
+
+        .btn-select:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(107,63,160,0.5);
         }
 
         .btn-select.selected {
-            background: #ff4444;
-            color: white;
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            box-shadow: 0 4px 15px rgba(231,76,60,0.4);
         }
 
         /* BARRA DE FINALIZAÇÃO */
@@ -142,41 +253,66 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: var(--primary);
-            padding: 25px 40px;
-            border-top: 4px solid var(--accent);
+            background: linear-gradient(180deg, #0f0820, #0a0015);
+            padding: 20px 40px;
+            border-top: 3px solid var(--accent);
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
-            box-shadow: 0 -15px 35px rgba(0,0,0,0.8);
+            box-shadow: 0 -10px 40px rgba(107,63,160,0.3);
+        }
+
+        .total-label {
+            opacity: 0.6;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .total-value {
+            color: var(--accent);
+            font-size: 2.2rem;
+            font-weight: 900;
+            text-shadow: 0 0 15px rgba(212,175,55,0.4);
+            line-height: 1;
         }
 
         .btn-confirm {
-            background: var(--success);
+            background: linear-gradient(135deg, #128c3e, var(--success));
             color: white;
-            padding: 20px 45px;
-            border-radius: 15px;
-            text-decoration: none;
+            padding: 18px 40px;
+            border-radius: 50px;
             font-weight: 900;
             display: flex;
             align-items: center;
-            gap: 15px;
-            font-size: 1.4rem;
+            gap: 12px;
+            font-size: 1.1rem;
             cursor: pointer;
             border: none;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 20px rgba(37,211,102,0.3);
+            transition: all 0.3s;
         }
 
-        /* MODAL DE AGENDAMENTO */
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37,211,102,0.4);
+        }
+
+        /* MODAL */
         .modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             z-index: 2000;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            backdrop-filter: blur(5px);
         }
 
         .modal-overlay.open {
@@ -184,142 +320,201 @@
         }
 
         .modal {
-            background: #1e1e1e;
+            background: linear-gradient(145deg, #1a1025, #0f0820);
             border: 2px solid var(--accent);
-            border-radius: 20px;
+            border-radius: 25px;
             padding: 40px;
             width: 100%;
             max-width: 500px;
-            animation: fadeIn 0.3s ease;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 0 40px rgba(107,63,160,0.2);
         }
 
         .modal h2 {
             color: var(--accent);
             text-align: center;
-            margin-top: 0;
-            font-size: 1.8rem;
-            letter-spacing: 2px;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
         }
 
         .modal-resumo {
-            background: #2a2a2a;
-            border-radius: 12px;
+            background: rgba(107,63,160,0.1);
+            border: 1px solid rgba(107,63,160,0.3);
+            border-radius: 15px;
             padding: 20px;
             margin-bottom: 25px;
         }
 
         .modal-resumo p {
-            margin: 6px 0;
+            margin: 8px 0;
             color: #ccc;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
-        .modal-resumo .total-resumo {
-            color: var(--accent);
-            font-size: 1.4rem;
-            font-weight: 900;
-            margin-top: 12px;
+        .total-resumo {
+            color: var(--accent) !important;
+            font-size: 1.3rem !important;
+            font-weight: 900 !important;
+            margin-top: 12px !important;
+            border-top: 1px solid rgba(212,175,55,0.3);
+            padding-top: 12px !important;
         }
 
         .modal label {
             display: block;
             color: var(--accent);
-            font-weight: 900;
-            margin-bottom: 6px;
-            margin-top: 16px;
-            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            margin-top: 18px;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
             text-transform: uppercase;
         }
 
         .modal input {
             width: 100%;
             padding: 14px 18px;
-            border-radius: 10px;
-            border: 1px solid #444;
-            background: #2a2a2a;
+            border-radius: 12px;
+            border: 1px solid rgba(107,63,160,0.4);
+            background: rgba(107,63,160,0.1);
             color: white;
             font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: border 0.3s;
         }
 
         .modal input:focus {
-            outline: 2px solid var(--accent);
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(212,175,55,0.2);
         }
 
         .btn-whatsapp {
-            background: var(--success);
+            background: linear-gradient(135deg, #128c3e, var(--success));
             color: white;
             padding: 18px;
-            border-radius: 12px;
+            border-radius: 15px;
             border: none;
             width: 100%;
             font-weight: 900;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             text-transform: uppercase;
+            letter-spacing: 2px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
             margin-top: 25px;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 5px 20px rgba(37,211,102,0.3);
+            transition: all 0.3s;
+        }
+
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37,211,102,0.4);
         }
 
         .btn-cancelar {
             background: transparent;
-            color: #888;
-            border: 1px solid #444;
-            padding: 14px;
+            color: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px;
             border-radius: 12px;
             width: 100%;
             font-weight: 700;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.9rem;
             margin-top: 10px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .btn-cancelar:hover {
+            border-color: rgba(255,255,255,0.3);
+            color: white;
+        }
+
+        /* SEPARADOR */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 30px 0;
+            opacity: 0.4;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         /* RESPONSIVO MOBILE */
         @media (max-width: 600px) {
-            header { padding: 20px; }
-            header h1 { font-size: 1.8rem; }
-            .filter-btn { font-size: 1rem; padding: 14px 10px; }
+            .header-text h1 { font-size: 1.8rem; letter-spacing: 3px; }
+            .logo-img { width: 70px; height: 70px; }
+            .filter-btn { font-size: 0.85rem; padding: 12px 10px; }
             .grid { grid-template-columns: 1fr; }
             .booking-bar { padding: 15px 20px; }
-            .btn-confirm { font-size: 1.1rem; padding: 14px 25px; }
+            .btn-confirm { font-size: 0.95rem; padding: 14px 20px; }
             .modal { padding: 25px; }
+            .total-value { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1 style="color: var(--accent); margin: 0; letter-spacing: 5px; font-size: 2.5rem;">PJ AGENDE PRO</h1>
-    <p style="opacity: 0.8; font-weight: 900; letter-spacing: 1px;">SISTEMA DE ALTA PERFORMANCE</p>
+    <div class="header-inner">
+        <img src="{{ url_for('static', filename='logo.jpg') }}" class="logo-img" alt="PJ Studio Logo">
+        <div class="header-text">
+            <h1>PJ AGENDE PRO</h1>
+            <p>SISTEMA DE ALTA PERFORMANCE</p>
+            <span class="header-badge">⭐ PJ STUDIO DESIGN</span>
+        </div>
+    </div>
 </header>
 
 <div class="container">
+    <div class="section-title">
+        <h2>✂️ ESCOLHA SEU SERVIÇO</h2>
+    </div>
+
     <div class="filter-container">
-        <button class="filter-btn" onclick="filtrar('Barbearia', this)">Barbearia</button>
-        <button class="filter-btn" onclick="filtrar('Salão', this)">Salão</button>
-        <button class="filter-btn" onclick="filtrar('Manicure', this)">Manicure</button>
+        <button class="filter-btn" onclick="filtrar('Barbearia', this)">
+            ✂️ Barbearia
+        </button>
+        <button class="filter-btn" onclick="filtrar('Salão', this)">
+            💇 Salão
+        </button>
+        <button class="filter-btn" onclick="filtrar('Manicure', this)">
+            💅 Manicure
+        </button>
     </div>
 
     <div class="grid">
         {% for item in produtos %}
         <div class="card" data-ramo="{{ item.categoria }}">
-            <img
-                src="{{ url_for('static', filename=item.imagem) }}"
-                class="card-img"
-                alt="{{ item.nome }}"
-                onerror="this.style.display='none'"
-            >
+            <div class="card-img-wrapper">
+                <img
+                    src="{{ url_for('static', filename=item.imagem) }}"
+                    class="card-img"
+                    alt="{{ item.nome }}"
+                    onerror="this.style.display='none'"
+                >
+            </div>
             <div class="card-content">
                 <h2 class="card-nome">{{ item.nome }}</h2>
                 <div class="price">R$ {{ "%.2f"|format(item.preco) }}</div>
-                <button class="btn-select" onclick="gerenciar(this, '{{ item.nome }}', {{ item.preco }})">SELECIONAR</button>
+                <button class="btn-select" onclick="gerenciar(this, '{{ item.nome }}', {{ item.preco }})">
+                    <i class="fas fa-plus-circle"></i> SELECIONAR
+                </button>
             </div>
         </div>
         {% endfor %}
@@ -329,37 +524,39 @@
 <!-- BARRA INFERIOR -->
 <div class="booking-bar">
     <div>
-        <span style="opacity: 0.7; font-weight: 900; font-size: 1.1rem;">TOTAL:</span><br>
-        <span id="total-val" style="color: var(--accent); font-size: 2.5rem; font-weight: 900;">R$ 0.00</span>
+        <div class="total-label">Total Selecionado</div>
+        <div class="total-value" id="total-val">R$ 0,00</div>
     </div>
     <button class="btn-confirm" onclick="abrirModal()">
-        <i class="fab fa-whatsapp"></i> FINALIZAR AGORA
+        <i class="fab fa-whatsapp" style="font-size:1.4rem"></i> AGENDAR AGORA
     </button>
 </div>
 
 <!-- MODAL DE AGENDAMENTO -->
 <div class="modal-overlay" id="modal-overlay">
     <div class="modal">
-        <h2>📋 RESUMO DO AGENDAMENTO</h2>
+        <h2>📋 RESUMO DO PEDIDO</h2>
 
         <div class="modal-resumo">
             <div id="lista-servicos"></div>
-            <p class="total-resumo" id="total-modal">Total: R$ 0.00</p>
+            <p class="total-resumo" id="total-modal">Total: R$ 0,00</p>
         </div>
 
-        <label>Seu Nome</label>
+        <label><i class="fas fa-user"></i> Seu Nome Completo</label>
         <input type="text" id="input-nome" placeholder="Ex: João Silva">
 
-        <label>Data Desejada</label>
+        <label><i class="fas fa-calendar"></i> Data Desejada</label>
         <input type="date" id="input-data">
 
-        <label>Horário Desejado</label>
+        <label><i class="fas fa-clock"></i> Horário Desejado</label>
         <input type="time" id="input-hora">
 
         <button class="btn-whatsapp" onclick="enviarWhatsApp()">
-            <i class="fab fa-whatsapp"></i> ENVIAR PELO WHATSAPP
+            <i class="fab fa-whatsapp" style="font-size:1.3rem"></i> CONFIRMAR PELO WHATSAPP
         </button>
-        <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+        <button class="btn-cancelar" onclick="fecharModal()">
+            ✕ Cancelar
+        </button>
     </div>
 </div>
 
@@ -386,16 +583,16 @@
         if (idx === -1) {
             selecionados.push({ nome, preco });
             total += preco;
-            btn.innerText = "REMOVER";
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> SELECIONADO';
             btn.classList.add('selected');
         } else {
             selecionados.splice(idx, 1);
             total -= preco;
-            btn.innerText = "SELECIONAR";
+            btn.innerHTML = '<i class="fas fa-plus-circle"></i> SELECIONAR';
             btn.classList.remove('selected');
         }
         total = Math.round(total * 100) / 100;
-        document.getElementById('total-val').innerText = `R$ ${total.toFixed(2)}`;
+        document.getElementById('total-val').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
     }
 
     function abrirModal() {
@@ -405,9 +602,9 @@
         }
         const lista = document.getElementById('lista-servicos');
         lista.innerHTML = selecionados.map(s =>
-            `<p>✅ ${s.nome} — <strong style="color:var(--accent)">R$ ${s.preco.toFixed(2)}</strong></p>`
+            `<p>✅ <strong>${s.nome}</strong> — <span style="color:var(--accent);font-weight:900">R$ ${s.preco.toFixed(2).replace('.',',')}</span></p>`
         ).join('');
-        document.getElementById('total-modal').innerText = `Total: R$ ${total.toFixed(2)}`;
+        document.getElementById('total-modal').innerText = `Total: R$ ${total.toFixed(2).replace('.',',')}`;
         document.getElementById('modal-overlay').classList.add('open');
     }
 
@@ -421,26 +618,26 @@
         const hora = document.getElementById('input-hora').value;
 
         if (!nome) { alert("Por favor, informe seu nome!"); return; }
-        if (!data) { alert("Por favor, informe a data desejada!"); return; }
-        if (!hora) { alert("Por favor, informe o horário desejado!"); return; }
+        if (!data)  { alert("Por favor, informe a data desejada!"); return; }
+        if (!hora)  { alert("Por favor, informe o horário desejado!"); return; }
 
-        const servicos = selecionados.map(s => `  • ${s.nome} — R$ ${s.preco.toFixed(2)}`).join('\n');
+        const servicos = selecionados.map(s => `  • ${s.nome} — R$ ${s.preco.toFixed(2).replace('.',',')}`).join('\n');
         const [ano, mes, dia] = data.split('-');
         const dataFormatada = `${dia}/${mes}/${ano}`;
 
         const msg =
-`🗓️ *AGENDAMENTO PJ STUDIO*
+`🗓️ *NOVO AGENDAMENTO - PJ STUDIO*
 
-👤 *Nome:* ${nome}
+👤 *Cliente:* ${nome}
 📅 *Data:* ${dataFormatada}
 🕐 *Horário:* ${hora}
 
-💈 *Serviços Selecionados:*
+✂️ *Serviços:*
 ${servicos}
 
-💰 *Total:* R$ ${total.toFixed(2)}
+💰 *Total:* R$ ${total.toFixed(2).replace('.',',')}
 
-_Mensagem enviada pelo PJ Agende Pro_`;
+_Agendamento feito pelo PJ Agende Pro_ ⭐`;
 
         window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
         fecharModal();
