@@ -1,43 +1,49 @@
+import os
 from flask import Flask, render_template
+from supabase import create_client, Client
 
 app = Flask(__name__)
 
-# Lista completa e revisada com caminhos de pastas específicos
-produtos = [
-    # CARNES (static/carnes)
-    {"id": 1, "nome": "Picanha Fatiada", "preco": 59.90, "categoria": "Carnes", "imagem": "carnes/picanha.jpg"},
-    {"id": 2, "nome": "Carne Suína", "preco": 24.90, "categoria": "Carnes", "imagem": "carnes/suina.jpg"},
-    {"id": 3, "nome": "Peito de Frango", "preco": 18.90, "categoria": "Carnes", "imagem": "carnes/frngo.jpg"},
-    
-    # BEBIDAS (static/bebidas)
-    {"id": 13, "nome": "Refrigerantes Variados", "preco": 8.90, "categoria": "Bebidas", "imagem": "bebidas/refrigerantes.jpg"},
-    {"id": 14, "nome": "Sucos Del Valle", "preco": 4.50, "categoria": "Bebidas", "imagem": "bebidas/sucos.jpg"},
-    {"id": 15, "nome": "Vinhos Tradição", "preco": 25.00, "categoria": "Bebidas", "imagem": "bebidas/vinhos.jpg"},
+# --- BLOCO DE CONEXÃO BLINDADA ---
+# As chaves são buscadas diretamente do ambiente do Render para segurança total
+url: str = os.environ.get("SUPABASE_URL")
+key: str = os.environ.get("SUPABASE_KEY")
 
-    # FRIOS (static/frios)
-    {"id": 16, "nome": "Mortadela Perdigão", "preco": 12.90, "categoria": "Frios", "imagem": "frios/mortadella.jpg"},
-    {"id": 17, "nome": "Muçarela em Barra", "preco": 32.00, "categoria": "Frios", "imagem": "frios/muçarela.jpg"},
-    {"id": 18, "nome": "Presunto Cozido", "preco": 15.50, "categoria": "Frios", "imagem": "frios/presunto.jpg"},
-    
-    # HORTIFRUTI (static/hortifruti)
-    {"id": 4, "nome": "Alface Lisa", "preco": 3.50, "categoria": "Hortifruti", "imagem": "hortifruti/alface.jpg"},
-    {"id": 5, "nome": "Batata Inglesa", "preco": 4.50, "categoria": "Hortifruti", "imagem": "hortifruti/batata.jpg"},
-    {"id": 6, "nome": "Cebola", "preco": 3.80, "categoria": "Hortifruti", "imagem": "hortifruti/cebola.jpg"},
-    
-    # MERCEARIA (static/mercearia)
-    {"id": 10, "nome": "Arroz Prato Fino", "preco": 28.90, "categoria": "Mercearia", "imagem": "mercearia/arroz.jpg"},
-    {"id": 11, "nome": "Feijão Kicaldo", "preco": 7.50, "categoria": "Mercearia", "imagem": "mercearia/feijao.jpg"},
-    {"id": 12, "nome": "Açúcar Cristal", "preco": 16.90, "categoria": "Mercearia", "imagem": "mercearia/acucar.jpg"},
-
-    # LIMPEZA (static/limpeza)
-    {"id": 7, "nome": "Detergente Veja", "preco": 2.20, "categoria": "Limpeza", "imagem": "limpeza/detergente.jpg"},
-    {"id": 8, "nome": "Vassoura de Nylon", "preco": 15.90, "categoria": "Limpeza", "imagem": "limpeza/vassoura.jpeg"},
-    {"id": 9, "nome": "Pazinha de Lixo", "preco": 5.50, "categoria": "Limpeza", "imagem": "limpeza/pazinha.jpg"},
-]
+# Inicialização do cliente Supabase com verificação de existência das chaves
+if url and key:
+    supabase: Client = create_client(url, key)
+else:
+    supabase = None
 
 @app.route('/')
 def index():
-    return render_template('index.html', produtos=produtos)
+    """
+    Rota principal: Busca serviços e produtos do banco de dados real.
+    Mantém o nome da variável 'produtos' para garantir compatibilidade 
+    com o seu template index.html atual.
+    """
+    lista_final = []
+    
+    if supabase:
+        try:
+            # Busca na tabela de serviços criada no SQL Editor
+            response_servicos = supabase.table("servicos").select("*").execute()
+            if response_servicos.data:
+                lista_final.extend(response_servicos.data)
+                
+            # Busca na tabela de produtos (caso existam itens de venda)
+            response_produtos = supabase.table("produtos").select("*").execute()
+            if response_produtos.data:
+                lista_final.extend(response_produtos.data)
+                
+        except Exception as e:
+            # Em caso de erro técnico, o erro é logado mas o site não cai
+            print(f"Erro na busca de dados: {e}")
+    
+    # Renderização integral enviando os dados do banco para o HTML
+    return render_template('index.html', produtos=lista_final)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Configuração de porta dinâmica para o ambiente do Render
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port, debug=False)
