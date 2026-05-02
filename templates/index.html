@@ -3,88 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PJ Agende PRO - Sistema de Gestão</title>
+    <title>PJ Agende PRO - Gestão Especializada</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #121212; --accent: #d4af37; --card-bg: #252525; --text: #ffffff; --success: #25d366; }
-        body { font-family: 'Inter', sans-serif; background: #1a1a1a; color: var(--text); margin: 0; padding-bottom: 100px; }
+        body { font-family: 'Inter', sans-serif; background: #1a1a1a; color: var(--text); margin: 0; padding-bottom: 120px; }
         header { background: var(--primary); padding: 30px; text-align: center; border-bottom: 3px solid var(--accent); }
         .container { max-width: 1000px; margin: auto; padding: 20px; }
         
-        /* Grid e Cards */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
-        .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid #333; transition: 0.3s; }
-        .card:hover { border-color: var(--accent); }
-        .card-img { width: 100%; height: 180px; object-fit: cover; background: #333; }
-        .card-content { padding: 20px; }
-        .price { color: var(--accent); font-size: 1.5rem; font-weight: bold; margin: 10px 0; }
-        
-        /* Botões */
-        .btn-select { background: var(--accent); color: black; padding: 12px; border-radius: 8px; border: none; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-select.active { background: #ff4444; color: white; }
+        /* SELETOR DE RAMO (CATEGORIAS) */
+        .filter-container { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding: 10px 5px; scrollbar-width: none; }
+        .filter-btn { background: var(--card-bg); color: white; border: 1px solid #444; padding: 12px 25px; border-radius: 25px; cursor: pointer; white-space: nowrap; font-weight: bold; transition: 0.3s; }
+        .filter-btn.active { background: var(--accent); color: black; border-color: var(--accent); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
 
-        /* Barra de Finalização */
-        .booking-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--primary); padding: 20px; border-top: 2px solid var(--accent); display: flex; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); }
-        .btn-confirm { background: var(--success); color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        /* GRID E CARDS */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid #333; transition: 0.4s; display: block; }
+        .card.hidden { display: none; } /* Blindagem de Filtro */
+        .card-img { width: 100%; height: 200px; object-fit: cover; background: #333; border-bottom: 2px solid #333; }
+        .card-content { padding: 20px; }
+        .price { color: var(--accent); font-size: 1.6rem; font-weight: bold; margin: 10px 0; }
+        
+        .btn-select { background: var(--accent); color: black; padding: 14px; border-radius: 8px; border: none; width: 100%; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 1rem; }
+        .btn-select.selected { background: #ff4444; color: white; }
+
+        /* BARRA DE AGENDAMENTO */
+        .booking-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--primary); padding: 20px 30px; border-top: 2px solid var(--accent); display: flex; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: 0 -10px 25px rgba(0,0,0,0.6); }
+        .btn-confirm { background: var(--success); color: white; padding: 14px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 10px; font-size: 1.1rem; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1 style="color: var(--accent); margin: 0;">PJ AGENDE PRO</h1>
-    <p style="opacity: 0.8;">Especialista em Automação - PJ Studio Design</p>
+    <h1 style="color: var(--accent); margin: 0; letter-spacing: 2px;">PJ AGENDE PRO</h1>
+    <p style="opacity: 0.8; margin-top: 5px;">Sistema de Agendamento Profissional</p>
 </header>
 
 <div class="container">
-    <div class="grid">
+    <!-- SELETOR DE RAMO LACRADO -->
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="filtrarRamo('Todos', this)">Todos</button>
+        <button class="filter-btn" onclick="filtrarRamo('Barbearia', this)">Barbearia</button>
+        <button class="filter-btn" onclick="filtrarRamo('Estética', this)">Estética</button>
+        <button class="filter-btn" onclick="filtrarRamo('Salão', this)">Salão</button>
+    </div>
+
+    <div class="grid" id="servicos-grid">
         {% for item in produtos %}
-        <div class="card">
-            <img src="{{ item.imagem_url if item.imagem_url else 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=500' }}" class="card-img" alt="{{ item.nome }}">
+        <div class="card" data-ramo="{{ item.categoria }}">
+            <img src="{{ item.imagem_url if item.imagem_url else 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=500' }}" class="card-img" alt="{{ item.nome }}">
             <div class="card-content">
-                <h2 style="margin: 0; font-size: 1.3rem;">{{ item.nome }}</h2>
-                <p style="color: #888; margin: 5px 0;">{{ item.categoria }}</p>
+                <h2 style="margin: 0; font-size: 1.4rem;">{{ item.nome }}</h2>
+                <span style="background: #333; padding: 4px 10px; border-radius: 5px; font-size: 0.8rem; color: var(--accent);">{{ item.categoria }}</span>
                 <div class="price">R$ {{ "%.2f"|format(item.preco) }}</div>
-                <button class="btn-select" onclick="gerenciarSelecao(this, '{{ item.nome }}', {{ item.preco }})">SELECIONAR</button>
+                <button class="btn-select" onclick="gerenciarItem(this, '{{ item.nome }}', {{ item.preco }})">SELECIONAR</button>
             </div>
         </div>
         {% else %}
-        <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
-            <p>Conectando ao banco de dados Supabase...</p>
+        <div style="grid-column: 1/-1; text-align: center; padding: 50px; color: #888;">
+            <i class="fas fa-spinner fa-spin"></i> Sincronizando com Supabase...
         </div>
         {% endfor %}
     </div>
 </div>
 
 <div class="booking-bar">
-    <div>Total: <span id="total-display" style="color: var(--accent); font-size: 1.4rem; font-weight: bold;">R$ 0.00</span></div>
-    <a href="#" class="btn-confirm" onclick="finalizarAgendamento()">
-        <i class="fab fa-whatsapp"></i> FINALIZAR
+    <div style="line-height: 1.2;">
+        <span style="font-size: 0.9rem; opacity: 0.7;">Total Estimado:</span><br>
+        <span id="total-val" style="color: var(--accent); font-size: 1.6rem; font-weight: bold;">R$ 0.00</span>
+    </div>
+    <a href="#" class="btn-confirm" onclick="finalizar()">
+        <i class="fab fa-whatsapp"></i> AGENDAR AGORA
     </a>
 </div>
 
 <script>
-    let carrinho = [];
-    let valorTotal = 0;
+    let selecionados = [];
+    let soma = 0;
 
-    function gerenciarSelecao(btn, nome, preco) {
-        if (!carrinho.includes(nome)) {
-            carrinho.push(nome);
-            valorTotal += preco;
-            btn.innerText = "REMOVER";
-            btn.classList.add('active');
-        } else {
-            carrinho = carrinho.filter(i => i !== nome);
-            valorTotal -= preco;
-            btn.innerText = "SELECIONAR";
-            btn.classList.remove('active');
-        }
-        document.getElementById('total-display').innerText = `R$ ${valorTotal.toFixed(2)}`;
+    // LÓGICA DO SELETOR DE RAMO (FILTRO)
+    function filtrarRamo(ramo, btn) {
+        // Atualiza botões
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Filtra os cards
+        document.querySelectorAll('.card').forEach(card => {
+            const ramoCard = card.getAttribute('data-ramo');
+            if (ramo === 'Todos' || ramoCard === ramo) {
+                card.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+            }
+        });
     }
 
-    function finalizarAgendamento() {
-        if (carrinho.length === 0) return alert("Selecione ao menos um serviço!");
-        const texto = `Olá! Gostaria de agendar: ${carrinho.join(', ')}. Total: R$ ${valorTotal.toFixed(2)}`;
-        window.open(`https://wa.me/5500000000000?text=${encodeURIComponent(texto)}`, '_blank');
+    // LÓGICA DE SELEÇÃO E SOMA
+    function gerenciarItem(btn, nome, preco) {
+        if (!selecionados.includes(nome)) {
+            selecionados.push(nome);
+            soma += preco;
+            btn.innerText = "REMOVER";
+            btn.classList.add('selected');
+        } else {
+            selecionados = selecionados.filter(i => i !== nome);
+            soma -= preco;
+            btn.innerText = "SELECIONAR";
+            btn.classList.remove('selected');
+        }
+        document.getElementById('total-val').innerText = `R$ ${soma.toFixed(2)}`;
+    }
+
+    function finalizar() {
+        if (selecionados.length === 0) return alert("Selecione um serviço para continuar!");
+        const msg = `Olá! Gostaria de agendar: ${selecionados.join(', ')}. Valor total: R$ ${soma.toFixed(2)}`;
+        window.open(`https://wa.me/5500000000000?text=${encodeURIComponent(msg)}`, '_blank');
     }
 </script>
 
