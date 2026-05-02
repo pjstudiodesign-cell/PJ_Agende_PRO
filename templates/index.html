@@ -3,41 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PJ Agende PRO - Gestão de Serviços</title>
+    <title>PJ AGENDE PRO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #0a0a0a; --accent: #d4af37; --card-bg: #1e1e1e; --text: #ffffff; --success: #25d366; }
-        body { font-family: 'Inter', sans-serif; background: #121212; color: var(--text); margin: 0; padding-bottom: 140px; }
-        header { background: var(--primary); padding: 30px; text-align: center; border-bottom: 4px solid var(--accent); }
+        body { font-family: 'Inter', sans-serif; background: #121212; color: var(--text); margin: 0; padding-bottom: 150px; }
+        header { background: var(--primary); padding: 35px; text-align: center; border-bottom: 4px solid var(--accent); }
         .container { max-width: 1100px; margin: auto; padding: 20px; }
         
-        /* SELETORES AMPLIADOS E SEM 'TODOS' */
-        .filter-container { display: flex; justify-content: center; gap: 20px; margin-bottom: 40px; }
-        .filter-btn { background: var(--card-bg); color: white; border: 2px solid #444; padding: 18px 40px; border-radius: 12px; cursor: pointer; font-weight: 900; transition: 0.3s; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
-        .filter-btn.active { background: var(--accent); color: black; border-color: var(--accent); box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+        /* BOTÕES DE FILTRO GIGANTES */
+        .filter-container { display: flex; justify-content: center; gap: 12px; margin-bottom: 40px; }
+        .filter-btn { background: var(--card-bg); color: white; border: 2px solid #444; padding: 20px 30px; border-radius: 15px; cursor: pointer; font-weight: 900; font-size: 1.3rem; text-transform: uppercase; width: 100%; transition: 0.3s; }
+        .filter-btn.active { background: var(--accent); color: black; border-color: var(--accent); box-shadow: 0 0 25px rgba(212, 175, 55, 0.4); }
 
-        /* GRID E CARDS PROFISSIONAIS */
+        /* GRID E CARDS DE ALTA PERFORMANCE */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid #333; transition: 0.4s; display: none; }
-        .card.visible { display: block; }
-        .card-img { width: 100%; height: 240px; object-fit: cover; border-bottom: 3px solid var(--accent); }
-        .card-content { padding: 25px; text-align: center; }
-        .price { color: var(--accent); font-size: 2rem; font-weight: 800; margin: 15px 0; }
+        .card { background: var(--card-bg); border-radius: 20px; overflow: hidden; border: 1px solid #333; display: none; transition: 0.4s; }
+        .card.visible { display: block; animation: fadeIn 0.5s ease; }
+        .card-img { width: 100%; height: 280px; object-fit: cover; border-bottom: 4px solid var(--accent); }
+        .card-content { padding: 30px; text-align: center; }
+        .price { color: var(--accent); font-size: 2.2rem; font-weight: 900; margin: 15px 0; }
         
-        /* BOTÃO SELECIONAR AMPLIADO */
-        .btn-select { background: var(--accent); color: black; padding: 18px; border-radius: 10px; border: none; width: 100%; font-weight: 900; cursor: pointer; transition: 0.2s; font-size: 1.1rem; }
+        /* BOTÃO SELECIONAR */
+        .btn-select { background: var(--accent); color: black; padding: 20px; border-radius: 12px; border: none; width: 100%; font-weight: 900; cursor: pointer; font-size: 1.2rem; text-transform: uppercase; }
         .btn-select.selected { background: #ff4444; color: white; }
 
-        /* BARRA DE FINALIZAÇÃO ROBUSTA */
-        .booking-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--primary); padding: 25px 50px; border-top: 3px solid var(--accent); display: flex; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: 0 -10px 30px rgba(0,0,0,0.7); }
-        .btn-confirm { background: var(--success); color: white; padding: 18px 45px; border-radius: 12px; text-decoration: none; font-weight: 900; display: flex; align-items: center; gap: 12px; font-size: 1.3rem; }
+        /* BARRA DE FINALIZAÇÃO PROFISSIONAL */
+        .booking-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--primary); padding: 25px 40px; border-top: 4px solid var(--accent); display: flex; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: 0 -15px 35px rgba(0,0,0,0.8); }
+        .btn-confirm { background: var(--success); color: white; padding: 20px 45px; border-radius: 15px; text-decoration: none; font-weight: 900; display: flex; align-items: center; gap: 15px; font-size: 1.4rem; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <header>
-    <h1 style="color: var(--accent); margin: 0; letter-spacing: 4px; font-size: 2.2rem;">PJ AGENDE PRO</h1>
-    <p style="opacity: 0.8; font-weight: bold;">SISTEMA DE ALTA PERFORMANCE - PJ STUDIO DESIGN</p>
+    <h1 style="color: var(--accent); margin: 0; letter-spacing: 5px; font-size: 2.5rem;">PJ AGENDE PRO</h1>
+    <p style="opacity: 0.8; font-weight: 900; letter-spacing: 1px;">SISTEMA DE ALTA PERFORMANCE</p>
 </header>
 
 <div class="container">
@@ -50,11 +52,10 @@
     <div class="grid">
         {% for item in produtos %}
         <div class="card" data-ramo="{{ item.categoria }}">
-            <img src="{{ url_for('static', filename=item.imagem_url) if item.imagem_url else 'https://via.placeholder.com/400x300?text=PJ+AGENDAMENTOS' }}" 
-                 class="card-img" alt="{{ item.nome }}">
-            
+            <!-- Lacre: Busca o arquivo na pasta certa do GitHub -->
+            <img src="{{ url_for('static', filename=item.imagem_url) }}" class="card-img" alt="{{ item.nome }}">
             <div class="card-content">
-                <h2 style="margin: 0; font-size: 1.6rem; color: var(--accent);">{{ item.nome }}</h2>
+                <h2 style="margin: 0; font-size: 1.8rem; color: var(--accent); text-transform: uppercase;">{{ item.nome }}</h2>
                 <div class="price">R$ {{ "%.2f"|format(item.preco) }}</div>
                 <button class="btn-select" onclick="gerenciar(this, '{{ item.nome }}', {{ item.preco }})">SELECIONAR</button>
             </div>
@@ -65,8 +66,8 @@
 
 <div class="booking-bar">
     <div>
-        <span style="opacity: 0.7; font-size: 1rem; font-weight: bold;">TOTAL:</span><br>
-        <span id="total-val" style="color: var(--accent); font-size: 2.2rem; font-weight: 900;">R$ 0.00</span>
+        <span style="opacity: 0.7; font-weight: 900; font-size: 1.1rem;">TOTAL:</span><br>
+        <span id="total-val" style="color: var(--accent); font-size: 2.5rem; font-weight: 900;">R$ 0.00</span>
     </div>
     <a href="#" class="btn-confirm" onclick="finalizar()">
         <i class="fab fa-whatsapp"></i> FINALIZAR AGORA
@@ -77,10 +78,10 @@
     let selecionados = [];
     let total = 0;
 
-    // Lacre: Abre em Barbearia automaticamente
+    // Inicia na Barbearia automaticamente
     window.onload = () => {
-        const bento = document.querySelector('.filter-btn');
-        if(bento) filtrar('Barbearia', bento);
+        const btn = document.querySelector('.filter-btn');
+        if(btn) filtrar('Barbearia', btn);
     };
 
     function filtrar(ramo, btn) {
@@ -107,8 +108,9 @@
     }
 
     function finalizar() {
-        if (selecionados.length === 0) return alert("Por favor, selecione um serviço!");
-        const msg = `Agendamento PJ PRO: ${selecionados.join(' + ')}. Total: R$ ${total.toFixed(2)}`;
+        if (selecionados.length === 0) return alert("Selecione um serviço primeiro!");
+        const msg = `Agendamento PJ PRO:\n${selecionados.join('\n')}\nTotal: R$ ${total.toFixed(2)}`;
+        // Substitua pelo seu WhatsApp real abaixo
         window.open(`https://wa.me/5500000000000?text=${encodeURIComponent(msg)}`);
     }
 </script>
