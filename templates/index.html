@@ -6,33 +6,291 @@
     <title>PJ AGENDE PRO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #0a0a0a; --accent: #d4af37; --card-bg: #1e1e1e; --text: #ffffff; --success: #25d366; }
-        body { font-family: 'Inter', sans-serif; background: #121212; color: var(--text); margin: 0; padding-bottom: 150px; }
-        header { background: var(--primary); padding: 35px; text-align: center; border-bottom: 4px solid var(--accent); }
-        .container { max-width: 1100px; margin: auto; padding: 20px; }
-        
-        /* BOTÕES DE FILTRO GIGANTES */
-        .filter-container { display: flex; justify-content: center; gap: 12px; margin-bottom: 40px; }
-        .filter-btn { background: var(--card-bg); color: white; border: 2px solid #444; padding: 20px 30px; border-radius: 15px; cursor: pointer; font-weight: 900; font-size: 1.3rem; text-transform: uppercase; width: 100%; transition: 0.3s; }
-        .filter-btn.active { background: var(--accent); color: black; border-color: var(--accent); box-shadow: 0 0 25px rgba(212, 175, 55, 0.4); }
+        :root {
+            --primary: #0a0a0a;
+            --accent: #d4af37;
+            --card-bg: #1e1e1e;
+            --text: #ffffff;
+            --success: #25d366;
+        }
 
-        /* GRID E CARDS DE ALTA PERFORMANCE */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card { background: var(--card-bg); border-radius: 20px; overflow: hidden; border: 1px solid #333; display: none; transition: 0.4s; }
-        .card.visible { display: block; animation: fadeIn 0.5s ease; }
-        .card-img { width: 100%; height: 280px; object-fit: cover; border-bottom: 4px solid var(--accent); }
-        .card-content { padding: 30px; text-align: center; }
-        .price { color: var(--accent); font-size: 2.2rem; font-weight: 900; margin: 15px 0; }
-        
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #121212;
+            color: var(--text);
+            margin: 0;
+            padding-bottom: 150px;
+        }
+
+        header {
+            background: var(--primary);
+            padding: 35px;
+            text-align: center;
+            border-bottom: 4px solid var(--accent);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* BOTÕES DE FILTRO */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--card-bg);
+            color: white;
+            border: 2px solid #444;
+            padding: 20px 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 900;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            flex: 1;
+            min-width: 120px;
+            transition: 0.3s;
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: black;
+            border-color: var(--accent);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+        }
+
+        /* GRID E CARDS */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #333;
+            display: none;
+            transition: 0.4s;
+        }
+
+        .card.visible {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-bottom: 4px solid var(--accent);
+            background: #2a2a2a;
+        }
+
+        .card-content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .card-nome {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--accent);
+            text-transform: uppercase;
+        }
+
+        .price {
+            color: var(--accent);
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin: 15px 0;
+        }
+
         /* BOTÃO SELECIONAR */
-        .btn-select { background: var(--accent); color: black; padding: 20px; border-radius: 12px; border: none; width: 100%; font-weight: 900; cursor: pointer; font-size: 1.2rem; text-transform: uppercase; }
-        .btn-select.selected { background: #ff4444; color: white; }
+        .btn-select {
+            background: var(--accent);
+            color: black;
+            padding: 20px;
+            border-radius: 12px;
+            border: none;
+            width: 100%;
+            font-weight: 900;
+            cursor: pointer;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
 
-        /* BARRA DE FINALIZAÇÃO PROFISSIONAL */
-        .booking-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--primary); padding: 25px 40px; border-top: 4px solid var(--accent); display: flex; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: 0 -15px 35px rgba(0,0,0,0.8); }
-        .btn-confirm { background: var(--success); color: white; padding: 20px 45px; border-radius: 15px; text-decoration: none; font-weight: 900; display: flex; align-items: center; gap: 15px; font-size: 1.4rem; }
+        .btn-select.selected {
+            background: #ff4444;
+            color: white;
+        }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* BARRA DE FINALIZAÇÃO */
+        .booking-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--primary);
+            padding: 25px 40px;
+            border-top: 4px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -15px 35px rgba(0,0,0,0.8);
+        }
+
+        .btn-confirm {
+            background: var(--success);
+            color: white;
+            padding: 20px 45px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.4rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* MODAL DE AGENDAMENTO */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: #1e1e1e;
+            border: 2px solid var(--accent);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal h2 {
+            color: var(--accent);
+            text-align: center;
+            margin-top: 0;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+        }
+
+        .modal-resumo {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .modal-resumo p {
+            margin: 6px 0;
+            color: #ccc;
+            font-size: 1rem;
+        }
+
+        .modal-resumo .total-resumo {
+            color: var(--accent);
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-top: 12px;
+        }
+
+        .modal label {
+            display: block;
+            color: var(--accent);
+            font-weight: 900;
+            margin-bottom: 6px;
+            margin-top: 16px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            background: #2a2a2a;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .modal input:focus {
+            outline: 2px solid var(--accent);
+        }
+
+        .btn-whatsapp {
+            background: var(--success);
+            color: white;
+            padding: 18px;
+            border-radius: 12px;
+            border: none;
+            width: 100%;
+            font-weight: 900;
+            cursor: pointer;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn-cancelar {
+            background: transparent;
+            color: #888;
+            border: 1px solid #444;
+            padding: 14px;
+            border-radius: 12px;
+            width: 100%;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* RESPONSIVO MOBILE */
+        @media (max-width: 600px) {
+            header { padding: 20px; }
+            header h1 { font-size: 1.8rem; }
+            .filter-btn { font-size: 1rem; padding: 14px 10px; }
+            .grid { grid-template-columns: 1fr; }
+            .booking-bar { padding: 15px 20px; }
+            .btn-confirm { font-size: 1.1rem; padding: 14px 25px; }
+            .modal { padding: 25px; }
+        }
     </style>
 </head>
 <body>
@@ -52,10 +310,14 @@
     <div class="grid">
         {% for item in produtos %}
         <div class="card" data-ramo="{{ item.categoria }}">
-            <!-- Lacre: Busca o arquivo na pasta certa do GitHub -->
-            <img src="{{ url_for('static', filename=item.imagem_url) }}" class="card-img" alt="{{ item.nome }}">
+            <img
+                src="{{ url_for('static', filename=item.imagem) }}"
+                class="card-img"
+                alt="{{ item.nome }}"
+                onerror="this.style.display='none'"
+            >
             <div class="card-content">
-                <h2 style="margin: 0; font-size: 1.8rem; color: var(--accent); text-transform: uppercase;">{{ item.nome }}</h2>
+                <h2 class="card-nome">{{ item.nome }}</h2>
                 <div class="price">R$ {{ "%.2f"|format(item.preco) }}</div>
                 <button class="btn-select" onclick="gerenciar(this, '{{ item.nome }}', {{ item.preco }})">SELECIONAR</button>
             </div>
@@ -64,24 +326,52 @@
     </div>
 </div>
 
+<!-- BARRA INFERIOR -->
 <div class="booking-bar">
     <div>
         <span style="opacity: 0.7; font-weight: 900; font-size: 1.1rem;">TOTAL:</span><br>
         <span id="total-val" style="color: var(--accent); font-size: 2.5rem; font-weight: 900;">R$ 0.00</span>
     </div>
-    <a href="#" class="btn-confirm" onclick="finalizar()">
+    <button class="btn-confirm" onclick="abrirModal()">
         <i class="fab fa-whatsapp"></i> FINALIZAR AGORA
-    </a>
+    </button>
+</div>
+
+<!-- MODAL DE AGENDAMENTO -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+        <h2>📋 RESUMO DO AGENDAMENTO</h2>
+
+        <div class="modal-resumo">
+            <div id="lista-servicos"></div>
+            <p class="total-resumo" id="total-modal">Total: R$ 0.00</p>
+        </div>
+
+        <label>Seu Nome</label>
+        <input type="text" id="input-nome" placeholder="Ex: João Silva">
+
+        <label>Data Desejada</label>
+        <input type="date" id="input-data">
+
+        <label>Horário Desejado</label>
+        <input type="time" id="input-hora">
+
+        <button class="btn-whatsapp" onclick="enviarWhatsApp()">
+            <i class="fab fa-whatsapp"></i> ENVIAR PELO WHATSAPP
+        </button>
+        <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+    </div>
 </div>
 
 <script>
     let selecionados = [];
     let total = 0;
+    const WHATSAPP = '5524981196037';
 
     // Inicia na Barbearia automaticamente
     window.onload = () => {
         const btn = document.querySelector('.filter-btn');
-        if(btn) filtrar('Barbearia', btn);
+        if (btn) filtrar('Barbearia', btn);
     };
 
     function filtrar(ramo, btn) {
@@ -93,26 +383,78 @@
     }
 
     function gerenciar(btn, nome, preco) {
-        if (!selecionados.includes(nome)) {
-            selecionados.push(nome);
+        const idx = selecionados.findIndex(s => s.nome === nome);
+        if (idx === -1) {
+            selecionados.push({ nome, preco });
             total += preco;
             btn.innerText = "REMOVER";
             btn.classList.add('selected');
         } else {
-            selecionados = selecionados.filter(i => i !== nome);
+            selecionados.splice(idx, 1);
             total -= preco;
             btn.innerText = "SELECIONAR";
             btn.classList.remove('selected');
         }
+        // Corrige flutuação de ponto
+        total = Math.round(total * 100) / 100;
         document.getElementById('total-val').innerText = `R$ ${total.toFixed(2)}`;
     }
 
-    function finalizar() {
-        if (selecionados.length === 0) return alert("Selecione um serviço primeiro!");
-        const msg = `Agendamento PJ PRO:\n${selecionados.join('\n')}\nTotal: R$ ${total.toFixed(2)}`;
-        // Substitua pelo seu WhatsApp real abaixo
-        window.open(`https://wa.me/5500000000000?text=${encodeURIComponent(msg)}`);
+    function abrirModal() {
+        if (selecionados.length === 0) {
+            alert("Selecione pelo menos um serviço primeiro!");
+            return;
+        }
+        // Atualiza resumo no modal
+        const lista = document.getElementById('lista-servicos');
+        lista.innerHTML = selecionados.map(s =>
+            `<p>✅ ${s.nome} — <strong style="color:var(--accent)">R$ ${s.preco.toFixed(2)}</strong></p>`
+        ).join('');
+        document.getElementById('total-modal').innerText = `Total: R$ ${total.toFixed(2)}`;
+        document.getElementById('modal-overlay').classList.add('open');
     }
+
+    function fecharModal() {
+        document.getElementById('modal-overlay').classList.remove('open');
+    }
+
+    function enviarWhatsApp() {
+        const nome = document.getElementById('input-nome').value.trim();
+        const data = document.getElementById('input-data').value;
+        const hora = document.getElementById('input-hora').value;
+
+        if (!nome) { alert("Por favor, informe seu nome!"); return; }
+        if (!data) { alert("Por favor, informe a data desejada!"); return; }
+        if (!hora) { alert("Por favor, informe o horário desejado!"); return; }
+
+        const servicos = selecionados.map(s => `  • ${s.nome} — R$ ${s.preco.toFixed(2)}`).join('\n');
+
+        // Formata data para exibição amigável
+        const [ano, mes, dia] = data.split('-');
+        const dataFormatada = `${dia}/${mes}/${ano}`;
+
+        const msg =
+`🗓️ *AGENDAMENTO PJ STUDIO*
+
+👤 *Nome:* ${nome}
+📅 *Data:* ${dataFormatada}
+🕐 *Horário:* ${hora}
+
+💈 *Serviços Selecionados:*
+${servicos}
+
+💰 *Total:* R$ ${total.toFixed(2)}
+
+_Mensagem enviada pelo PJ Agende Pro_`;
+
+        window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
+        fecharModal();
+    }
+
+    // Fecha modal ao clicar fora
+    document.getElementById('modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) fecharModal();
+    });
 </script>
 
 </body>
