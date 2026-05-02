@@ -3,229 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encarte Interativo - Supermercado</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>PJ Agende PRO - Gestão Especializada</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* AJUSTE CIRÚRGICO DE CORES PARA ALTO IMPACTO PROFISSIONAL */
-        body { 
-            padding-bottom: 140px; 
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background-color: #f8f9fa; /* Cinza claro profissional: foco total no produto */
-            color: #212529;
-        }
-
-        .card {
-            border-radius: 15px;
-            transition: all 0.3s ease;
-            border: none !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 20px rgba(0,0,0,0.1);
-        }
-
-        .card-img-top { 
-            height: 130px; 
-            object-fit: contain; 
-            padding: 12px;
-            background-color: #fff; /* Garante que o fundo da foto seja limpo */
-            border-radius: 15px 15px 0 0;
-        }
-
-        .secao-titulo { 
-            background: linear-gradient(90deg, #1b5e20, #2e7d32); /* Verde floresta: Confiança e Qualidade */
-            color: white; 
-            padding: 14px 25px; 
-            border-radius: 12px;
-            margin-top: 40px; 
-            margin-bottom: 20px; 
-            font-size: 1.25rem; 
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .carrinho-fixo { 
-            position: fixed; 
-            bottom: 0; left: 0; right: 0; 
-            background: #ffffff; 
-            padding: 20px; 
-            border-top: 4px solid #1b5e20; 
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.1); 
-            z-index: 1000; 
-        }
-
-        .btn-success {
-            background-color: #2e7d32;
-            border: none;
-            padding: 8px;
-            font-weight: 600;
-            border-radius: 10px;
-        }
-
-        .btn-success:hover { background-color: #1b5e20; }
-
-        .btn-primary { /* Botão de Finalizar */
-            background-color: #ef6c00; /* Laranja: Cor de ação e venda */
-            border: none;
-            box-shadow: 0 4px 15px rgba(239, 108, 0, 0.3);
-        }
-
-        .btn-primary:hover { background-color: #e65100; }
-
-        h1 {
-            font-weight: 800;
-            color: #1b5e20;
-            margin-top: 20px;
-        }
-
-        #campo-troco { display: none; } 
+        :root { --primary: #121212; --accent: #d4af37; --text: #ffffff; }
+        body { font-family: 'Inter', sans-serif; background: #1a1a1a; color: var(--text); margin: 0; }
+        header { background: var(--primary); padding: 30px; text-align: center; border-bottom: 3px solid var(--accent); }
+        .container { max-width: 900px; margin: auto; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: #252525; border-radius: 12px; padding: 20px; border: 1px solid #333; transition: 0.3s; }
+        .card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .price { color: var(--accent); font-size: 1.5rem; font-weight: bold; margin: 15px 0; }
+        .btn { background: var(--accent); color: #000; padding: 12px; border-radius: 8px; text-decoration: none; display: block; text-align: center; font-weight: bold; }
+        .footer { text-align: center; margin-top: 50px; color: #666; font-size: 0.8rem; }
     </style>
 </head>
 <body>
-
-    <div class="container py-4">
-        <h1 class="text-center mb-4">🛒 Ofertas do Dia</h1>
-
-        {% set categorias = [
-            {'id': 'Carnes', 'titulo': '🥩 Açougue'},
-            {'id': 'Bebidas', 'titulo': '🍾 Bebidas'},
-            {'id': 'Frios', 'titulo': '🧀 Frios e Laticínios'},
-            {'id': 'Hortifruti', 'titulo': '🥦 Hortifruti'},
-            {'id': 'Mercearia', 'titulo': '🥫 Mercearia'},
-            {'id': 'Limpeza', 'titulo': '🧹 Limpeza'}
-        ] %}
-
-        {% for cat in categorias %}
-        <div class="secao-titulo">{{ cat.titulo }}</div>
-        <div class="row row-cols-2 row-cols-md-4 g-3">
-            {% for p in produtos if p.categoria == cat.id %}
-            <div class="col">
-                <div class="card h-100">
-                    <img src="{{ url_for('static', filename=p.imagem) }}" class="card-img-top">
-                    <div class="card-body text-center p-2">
-                        <h6 class="mb-1" style="font-size: 0.85rem; height: 38px; color: #444;">{{ p.nome }}</h6>
-                        <p class="fw-bold text-success mb-2" style="font-size: 1.1rem;">R$ {{ "%.2f"|format(p.preco) }}</p>
-                        <button class="btn btn-success btn-sm w-100" onclick="adicionar('{{ p.nome }}', {{ p.preco }})">Adicionar</button>
-                    </div>
-                </div>
+    <header>
+        <h1 style="color: var(--accent); margin: 0;">PJ AGENDE PRO</h1>
+        <p>Sua agenda profissional em um clique</p>
+    </header>
+    <div class="container">
+        <div class="grid">
+            {% for item in produtos %}
+            <div class="card">
+                <h2 style="margin: 0;">{{ item.nome }}</h2>
+                <p style="color: #aaa;">{{ item.categoria }}</p>
+                <div class="price">R$ {{ "%.2f"|format(item.preco) }}</div>
+                <a href="https://wa.me/5500000000000" class="btn">AGENDAR AGORA</a>
             </div>
+            {% else %}
+            <p style="grid-column: 1/-1; text-align: center;">Aguardando carregamento do banco de dados...</p>
             {% endfor %}
         </div>
-        {% endfor %}
-
-        <div class="card mt-5 p-4 shadow-sm border-0 mb-5" style="background: #fff; border-left: 5px solid #1b5e20 !important;">
-            <h5 class="mb-4 text-dark fw-bold">📍 Informações de Entrega</h5>
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label small fw-bold">Nome:</label>
-                    <input type="text" id="nome_cliente" class="form-control" placeholder="Seu nome">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label small fw-bold">WhatsApp:</label>
-                    <input type="text" id="contato_cliente" class="form-control" placeholder="(00) 00000-0000">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label small fw-bold">Bairro:</label>
-                    <select id="bairro" class="form-select" onchange="atualizarTaxa()">
-                        <option value="0" selected>Selecione o bairro...</option>
-                        <option value="5">Centro - R$ 5,00</option>
-                        <option value="8">Bairro Novo - R$ 8,00</option>
-                        <option value="12">Vila Real - R$ 12,00</option>
-                        <option value="0">Retirar no Mercado - R$ 0,00</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label small fw-bold">Endereço:</label>
-                    <input type="text" id="endereco" class="form-control" placeholder="Rua e número">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label small fw-bold">Pagamento:</label>
-                    <select id="pagamento" class="form-select" onchange="verificarTroco()">
-                        <option value="Pix">Pix</option>
-                        <option value="Dinheiro">Dinheiro</option>
-                        <option value="Cartão de Crédito">Cartão de Crédito</option>
-                        <option value="Cartão de Débito">Cartão de Débito</option>
-                    </select>
-                </div>
-                <div class="col-md-6" id="campo-troco">
-                    <label class="form-label small fw-bold text-danger">Troco para quanto?</label>
-                    <input type="text" id="valor_troco" class="form-control" placeholder="R$ 0,00">
-                </div>
-            </div>
+        <div class="footer">
+            Desenvolvido por PJ Studio Design &copy; 2026
         </div>
     </div>
-
-    <div class="carrinho-fixo">
-        <div class="container d-flex justify-content-between align-items-center">
-            <div>
-                <span class="text-muted small">Produtos: R$ <span id="total-produtos">0.00</span></span><br>
-                <span class="text-danger small">Taxa: R$ <span id="valor-taxa">0.00</span></span>
-            </div>
-            <div class="text-end">
-                <h3 class="mb-0 text-success fw-bold">Total: R$ <span id="total-geral">0.00</span></h3>
-                <button class="btn btn-primary btn-lg fw-bold px-4" onclick="enviarZap()">Finalizar Pedido</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        /* LÓGICA MANTIDA 100% INTACTA */
-        let totalProdutos = 0;
-        let taxaEntrega = 0;
-        let itensCarrinho = [];
-
-        function adicionar(nome, preco) {
-            totalProdutos += preco;
-            itensCarrinho.push(nome);
-            atualizarTela();
-        }
-
-        function atualizarTaxa() {
-            taxaEntrega = parseFloat(document.getElementById('bairro').value);
-            atualizarTela();
-        }
-
-        function atualizarTela() {
-            document.getElementById('total-produtos').innerText = totalProdutos.toFixed(2);
-            document.getElementById('valor-taxa').innerText = taxaEntrega.toFixed(2);
-            document.getElementById('total-geral').innerText = (totalProdutos + taxaEntrega).toFixed(2);
-        }
-
-        function verificarTroco() {
-            const pagamento = document.getElementById('pagamento').value;
-            const divTroco = document.getElementById('campo-troco');
-            divTroco.style.display = (pagamento === 'Dinheiro') ? 'block' : 'none';
-        }
-
-        function enviarZap() {
-            const nome = document.getElementById('nome_cliente').value;
-            const contato = document.getElementById('contato_cliente').value;
-            const bairro = document.getElementById('bairro').options[document.getElementById('bairro').selectedIndex].text;
-            const endereco = document.getElementById('endereco').value;
-            const pagto = document.getElementById('pagamento').value;
-            const troco = document.getElementById('valor_troco').value;
-            const totalGeral = (totalProdutos + taxaEntrega).toFixed(2);
-
-            if(!nome || !contato || totalProdutos === 0) {
-                alert("Preencha os dados e escolha os produtos!");
-                return;
-            }
-
-            let mensagem = `*PEDIDO ONLINE - MERCADO*\n\n`;
-            mensagem += `👤 *Cliente:* ${nome}\n`;
-            mensagem += `📞 *Contato:* ${contato}\n`;
-            mensagem += `📍 *Endereço:* ${endereco}\n`;
-            mensagem += `🏘️ *Bairro:* ${bairro}\n`;
-            mensagem += `💳 *Pagamento:* ${pagto}\n`;
-            if(pagto === 'Dinheiro' && troco) mensagem += `💵 *Troco para:* R$ ${troco}\n`;
-            mensagem += `\n📦 *Itens:*\n- ${itensCarrinho.join('\n- ')}\n\n`;
-            mensagem += `💰 *TOTAL: R$ ${totalGeral}*`;
-
-            const fone = "5524981196037"; 
-            window.open(`https://wa.me/${fone}?text=${encodeURIComponent(mensagem)}`);
-        }
-    </script>
 </body>
 </html>
