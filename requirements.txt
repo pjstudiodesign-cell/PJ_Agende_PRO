@@ -6,3 +6,7 @@ Jinja2==3.1.6
 MarkupSafe==3.0.3
 Werkzeug==3.1.6
 gunicorn
+supabase
+python-dotenv
+httpx==0.24.1
+pandas
