@@ -1,30 +1,33 @@
 import os
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, send_from_directory
 from supabase import create_client, Client
 
-app = Flask(__name__)
+# Inicialização com o caminho fixo para os arquivos estáticos
+app = Flask(__name__, static_folder='static', template_folder='templates')
 
-# Configurações do Supabase - Buscando do ambiente para segurança
+# Configurações do Supabase
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 @app.route('/')
 def index():
-    # Rota principal para carregar o seu index.html já lacrado
     return render_template('index.html')
+
+# ROTA CRÍTICA: Garante que as imagens da barbearia sejam entregues pelo servidor
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(app.static_folder, filename)
 
 @app.route('/api/produtos')
 def get_produtos():
-    # Busca os dados da tabela produtos que você já criou
     try:
+        # Busca os dados da Barbearia que você populou
         response = supabase.table('produtos').select("*").execute()
         return jsonify(response.data)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    # Configuração cirúrgica para o Render
     port = int(os.environ.get("PORT", 5000))
-    # Host 0.0.0.0 é obrigatório para o deploy não falhar
     app.run(host='0.0.0.0', port=port)
