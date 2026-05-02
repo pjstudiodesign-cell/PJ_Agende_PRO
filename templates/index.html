@@ -368,7 +368,6 @@
     let total = 0;
     const WHATSAPP = '5524981196037';
 
-    // Inicia na Barbearia automaticamente
     window.onload = () => {
         const btn = document.querySelector('.filter-btn');
         if (btn) filtrar('Barbearia', btn);
@@ -395,7 +394,6 @@
             btn.innerText = "SELECIONAR";
             btn.classList.remove('selected');
         }
-        // Corrige flutuação de ponto
         total = Math.round(total * 100) / 100;
         document.getElementById('total-val').innerText = `R$ ${total.toFixed(2)}`;
     }
@@ -405,7 +403,6 @@
             alert("Selecione pelo menos um serviço primeiro!");
             return;
         }
-        // Atualiza resumo no modal
         const lista = document.getElementById('lista-servicos');
         lista.innerHTML = selecionados.map(s =>
             `<p>✅ ${s.nome} — <strong style="color:var(--accent)">R$ ${s.preco.toFixed(2)}</strong></p>`
@@ -428,8 +425,6 @@
         if (!hora) { alert("Por favor, informe o horário desejado!"); return; }
 
         const servicos = selecionados.map(s => `  • ${s.nome} — R$ ${s.preco.toFixed(2)}`).join('\n');
-
-        // Formata data para exibição amigável
         const [ano, mes, dia] = data.split('-');
         const dataFormatada = `${dia}/${mes}/${ano}`;
 
@@ -451,7 +446,6 @@ _Mensagem enviada pelo PJ Agende Pro_`;
         fecharModal();
     }
 
-    // Fecha modal ao clicar fora
     document.getElementById('modal-overlay').addEventListener('click', function(e) {
         if (e.target === this) fecharModal();
     });
