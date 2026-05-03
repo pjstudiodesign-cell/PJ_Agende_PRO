@@ -41,7 +41,7 @@ DURACAO_PADRAO = 60
 
 
 def get_slots_bloqueados(horario_inicio_str, duracao_minutos):
-    """Retorna todos os slots de 30 min ocupados por um serviço."""
+    """Retorna todos os slots de 30min ocupados por um serviço."""
     fmt = "%H:%M"
     inicio = datetime.strptime(horario_inicio_str, fmt)
     slots = []
@@ -56,8 +56,8 @@ def get_slots_bloqueados(horario_inicio_str, duracao_minutos):
 @app.route('/')
 def index():
     try:
-        response = supabase.table('produtos').select("*").execute()
-        return render_template('index.html', produtos=response.data, duracoes=DURACOES)
+        produtos = supabase.table('produtos').select("*").execute()
+        return render_template('index.html', produtos=produtos.data, duracoes=DURACOES)
     except Exception as e:
         return f"Erro Crítico: {str(e)}", 500
 
@@ -67,30 +67,47 @@ def serve_static(filename):
     return send_from_directory(app.static_folder, filename)
 
 
+@app.route('/profissionais', methods=['GET'])
+def get_profissionais():
+    """Retorna profissionais ativos de uma categoria."""
+    categoria = request.args.get('categoria')
+    if not categoria:
+        return jsonify({'error': 'categoria obrigatória'}), 400
+    try:
+        resp = supabase.table('profissionais') \
+            .select('id, nome') \
+            .eq('categoria', categoria) \
+            .eq('ativo', True) \
+            .execute()
+        return jsonify({'profissionais': resp.data})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/horarios-ocupados', methods=['GET'])
 def horarios_ocupados():
-    data     = request.args.get('data')
-    servicos = request.args.getlist('servico')
+    """Retorna horários bloqueados para um profissional em uma data."""
+    data            = request.args.get('data')
+    profissional_id = request.args.get('profissional_id')
+    servicos        = request.args.getlist('servico')
 
-    if not data or not servicos:
-        return jsonify({'error': 'data e servico são obrigatórios'}), 400
+    if not data or not profissional_id:
+        return jsonify({'error': 'data e profissional_id são obrigatórios'}), 400
 
     try:
+        resp = supabase.table('agendamentos') \
+            .select('horario, servico') \
+            .eq('data', data) \
+            .eq('profissional_id', profissional_id) \
+            .execute()
+
         todos_bloqueados = set()
-
-        for servico in servicos:
-            response = supabase.table('agendamentos') \
-                .select('horario') \
-                .eq('data', data) \
-                .eq('servico', servico) \
-                .execute()
-
-            duracao = DURACOES.get(servico, DURACAO_PADRAO)
-
-            for row in response.data:
-                hora_str = row['horario'][:5]
-                slots = get_slots_bloqueados(hora_str, duracao)
-                todos_bloqueados.update(slots)
+        for row in resp.data:
+            hora_str = row['horario'][:5]
+            servico  = row['servico']
+            duracao  = DURACOES.get(servico, DURACAO_PADRAO)
+            slots    = get_slots_bloqueados(hora_str, duracao)
+            todos_bloqueados.update(slots)
 
         return jsonify({'ocupados': sorted(list(todos_bloqueados))})
 
@@ -100,46 +117,54 @@ def horarios_ocupados():
 
 @app.route('/agendar', methods=['POST'])
 def agendar():
-    dados    = request.get_json()
-    cliente  = dados.get('cliente')
-    servicos = dados.get('servicos')
-    data     = dados.get('data')
-    horario  = dados.get('horario')
-    total    = dados.get('total')
+    """Salva agendamento verificando conflitos por profissional."""
+    dados           = request.get_json()
+    cliente         = dados.get('cliente')
+    servicos        = dados.get('servicos')
+    data            = dados.get('data')
+    horario         = dados.get('horario')
+    total           = dados.get('total')
+    profissional_id = dados.get('profissional_id')
+    profissional_nome = dados.get('profissional_nome')
 
-    if not all([cliente, servicos, data, horario]):
+    if not all([cliente, servicos, data, horario, profissional_id]):
         return jsonify({'error': 'Campos obrigatórios faltando'}), 400
 
     try:
-        for servico in servicos:
-            duracao     = DURACOES.get(servico, DURACAO_PADRAO)
-            slots_novos = get_slots_bloqueados(horario, duracao)
+        # Busca todos agendamentos do profissional nessa data
+        existing = supabase.table('agendamentos') \
+            .select('horario, servico') \
+            .eq('data', data) \
+            .eq('profissional_id', profissional_id) \
+            .execute()
 
-            existing = supabase.table('agendamentos') \
-                .select('horario') \
-                .eq('data', data) \
-                .eq('servico', servico) \
-                .execute()
+        # Calcula duração total dos novos serviços
+        duracao_total = sum(DURACOES.get(s, DURACAO_PADRAO) for s in servicos)
+        slots_novos   = get_slots_bloqueados(horario, duracao_total)
 
-            for row in existing.data:
-                hora_existente     = row['horario'][:5]
-                duracao_existente  = DURACOES.get(servico, DURACAO_PADRAO)
-                slots_existentes   = get_slots_bloqueados(hora_existente, duracao_existente)
+        # Verifica conflito com agendamentos existentes
+        for row in existing.data:
+            hora_existente    = row['horario'][:5]
+            duracao_existente = DURACOES.get(row['servico'], DURACAO_PADRAO)
+            slots_existentes  = get_slots_bloqueados(hora_existente, duracao_existente)
 
-                if set(slots_novos) & set(slots_existentes):
-                    return jsonify({
-                        'error': f'Horário indisponível para "{servico}". '
-                                 f'Já existe agendamento às {hora_existente} '
-                                 f'que ocupa esse período.'
-                    }), 409
+            if set(slots_novos) & set(slots_existentes):
+                return jsonify({
+                    'error': f'Profissional indisponível nesse horário. '
+                             f'Já existe agendamento às {hora_existente}. '
+                             f'Escolha outro horário ou profissional.'
+                }), 409
 
+        # Salva cada serviço
         for servico in servicos:
             supabase.table('agendamentos').insert({
-                'cliente': cliente,
-                'servico': servico,
-                'data':    data,
-                'horario': horario,
-                'total':   float(total)
+                'cliente':           cliente,
+                'servico':           servico,
+                'data':              data,
+                'horario':           horario,
+                'total':             float(total),
+                'profissional_id':   int(profissional_id),
+                'profissional_nome': profissional_nome
             }).execute()
 
         return jsonify({'success': True})
