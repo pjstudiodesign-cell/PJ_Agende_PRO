@@ -13,7 +13,6 @@
             --purple-light: #6b3fa0;
             --accent: #d4af37;
             --accent-light: #f0d060;
-            --card-bg: #1a1025;
             --text: #ffffff;
             --success: #25d366;
         }
@@ -28,7 +27,6 @@
             padding-bottom: 160px;
         }
 
-        /* HEADER */
         header {
             background: linear-gradient(180deg, #0a0015 0%, #1a0a2e 100%);
             padding: 25px 20px 30px;
@@ -37,19 +35,13 @@
             box-shadow: 0 4px 30px rgba(107,63,160,0.4);
         }
 
-        .header-inner {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
+        .header-inner { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
 
         .logo-img {
             width: 90px; height: 90px;
             border-radius: 20px;
             border: 2px solid var(--accent);
-            box-shadow: 0 0 20px rgba(212,175,55,0.4), 0 0 40px rgba(107,63,160,0.3);
+            box-shadow: 0 0 20px rgba(212,175,55,0.4);
             object-fit: cover;
         }
 
@@ -62,173 +54,84 @@
             line-height: 1;
         }
 
-        .header-text p {
-            color: rgba(255,255,255,0.7);
-            font-weight: 700;
-            letter-spacing: 3px;
-            font-size: 0.85rem;
-            margin-top: 6px;
-        }
+        .header-text p { color: rgba(255,255,255,0.7); font-weight: 700; letter-spacing: 3px; font-size: 0.85rem; margin-top: 6px; }
 
         .header-badge {
             background: linear-gradient(135deg, var(--purple-light), var(--accent));
-            color: black;
-            font-size: 0.7rem;
-            font-weight: 900;
-            padding: 4px 12px;
-            border-radius: 20px;
-            letter-spacing: 2px;
-            margin-top: 8px;
-            display: inline-block;
+            color: black; font-size: 0.7rem; font-weight: 900;
+            padding: 4px 12px; border-radius: 20px; letter-spacing: 2px;
+            margin-top: 8px; display: inline-block;
         }
 
         .container { max-width: 1200px; margin: auto; padding: 30px 20px; }
 
         .section-title { text-align: center; margin-bottom: 25px; }
-        .section-title h2 {
-            color: var(--accent);
-            font-size: 1rem;
-            letter-spacing: 4px;
-            font-weight: 700;
-            opacity: 0.8;
-        }
+        .section-title h2 { color: var(--accent); font-size: 1rem; letter-spacing: 4px; font-weight: 700; opacity: 0.8; }
 
-        /* FILTROS — 5 ABAS */
-        .filter-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
+        .filter-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; flex-wrap: wrap; }
 
         .filter-btn {
             background: var(--purple-dark);
             color: rgba(255,255,255,0.7);
             border: 2px solid rgba(107,63,160,0.4);
-            padding: 14px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 900;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            flex: 1;
-            min-width: 120px;
-            max-width: 200px;
-            transition: all 0.3s;
-            font-family: 'Montserrat', sans-serif;
-            text-align: center;
+            padding: 14px 20px; border-radius: 50px; cursor: pointer;
+            font-weight: 900; font-size: 0.9rem; text-transform: uppercase;
+            letter-spacing: 1px; flex: 1; min-width: 120px; max-width: 200px;
+            transition: all 0.3s; font-family: 'Montserrat', sans-serif; text-align: center;
         }
 
-        .filter-btn:hover {
-            border-color: var(--purple-light);
-            color: white;
-            transform: translateY(-2px);
-        }
+        .filter-btn:hover { border-color: var(--purple-light); color: white; transform: translateY(-2px); }
 
         .filter-btn.active {
             background: linear-gradient(135deg, var(--purple-light), var(--accent));
-            color: black;
-            border-color: var(--accent);
-            box-shadow: 0 5px 25px rgba(212,175,55,0.35);
-            transform: translateY(-2px);
+            color: black; border-color: var(--accent);
+            box-shadow: 0 5px 25px rgba(212,175,55,0.35); transform: translateY(-2px);
         }
 
-        /* GRID E CARDS */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
 
         .card {
             background: linear-gradient(145deg, #1a1025, #0f0820);
-            border-radius: 20px;
-            overflow: hidden;
+            border-radius: 20px; overflow: hidden;
             border: 1px solid rgba(107,63,160,0.3);
-            display: none;
-            transition: all 0.4s;
+            display: none; transition: all 0.4s;
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
-            box-shadow: 0 15px 40px rgba(212,175,55,0.15);
-        }
-
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 15px 40px rgba(212,175,55,0.15); }
         .card.visible { display: block; animation: fadeIn 0.5s ease; }
 
         .card-img-wrapper { position: relative; overflow: hidden; }
 
         .card-img {
-            width: 100%; height: 250px;
-            object-fit: cover;
-            border-bottom: 3px solid var(--accent);
-            transition: transform 0.4s;
+            width: 100%; height: 250px; object-fit: cover;
+            border-bottom: 3px solid var(--accent); transition: transform 0.4s;
         }
 
         .card:hover .card-img { transform: scale(1.05); }
-
         .card-content { padding: 22px; text-align: center; }
 
-        .card-nome {
-            font-size: 1.3rem;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 900;
-            margin-bottom: 5px;
-        }
-
-        .card-duracao {
-            color: rgba(255,255,255,0.4);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        .price {
-            color: var(--accent-light);
-            font-size: 1.9rem;
-            font-weight: 900;
-            margin: 10px 0 18px;
-        }
+        .card-nome { font-size: 1.3rem; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; font-weight: 900; margin-bottom: 5px; }
+        .card-duracao { color: rgba(255,255,255,0.4); font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; }
+        .price { color: var(--accent-light); font-size: 1.9rem; font-weight: 900; margin: 10px 0 18px; }
 
         .btn-select {
             background: linear-gradient(135deg, var(--purple-light), #8b5cf6);
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
-            border: none;
-            width: 100%;
-            font-weight: 900;
-            cursor: pointer;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-            font-family: 'Montserrat', sans-serif;
-            box-shadow: 0 4px 15px rgba(107,63,160,0.4);
+            color: white; padding: 15px; border-radius: 12px; border: none;
+            width: 100%; font-weight: 900; cursor: pointer; font-size: 0.95rem;
+            text-transform: uppercase; letter-spacing: 2px; transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(107,63,160,0.4);
         }
 
         .btn-select:hover { transform: translateY(-2px); }
         .btn-select.selected { background: linear-gradient(135deg, #c0392b, #e74c3c); }
 
-        /* BARRA INFERIOR */
         .booking-bar {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
+            position: fixed; bottom: 0; left: 0; right: 0;
             background: linear-gradient(180deg, #0f0820, #0a0015);
-            padding: 20px 40px;
-            border-top: 3px solid var(--accent);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            box-shadow: 0 -10px 40px rgba(107,63,160,0.3);
+            padding: 20px 40px; border-top: 3px solid var(--accent);
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; box-shadow: 0 -10px 40px rgba(107,63,160,0.3);
         }
 
         .total-label { opacity: 0.6; font-weight: 700; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; }
@@ -236,237 +139,203 @@
 
         .btn-confirm {
             background: linear-gradient(135deg, #128c3e, var(--success));
-            color: white;
-            padding: 18px 40px;
-            border-radius: 50px;
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            border: none;
-            font-family: 'Montserrat', sans-serif;
-            letter-spacing: 1px;
-            box-shadow: 0 5px 20px rgba(37,211,102,0.3);
-            transition: all 0.3s;
+            color: white; padding: 18px 40px; border-radius: 50px; font-weight: 900;
+            display: flex; align-items: center; gap: 12px; font-size: 1.1rem;
+            cursor: pointer; border: none; font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px; box-shadow: 0 5px 20px rgba(37,211,102,0.3); transition: all 0.3s;
         }
 
         .btn-confirm:hover { transform: translateY(-2px); }
 
         /* MODAL */
         .modal-overlay {
-            display: none;
-            position: fixed;
+            display: none; position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.9); z-index: 2000;
+            justify-content: center; align-items: center;
+            padding: 20px; backdrop-filter: blur(5px);
         }
 
         .modal-overlay.open { display: flex; }
 
         .modal {
             background: linear-gradient(145deg, #1a1025, #0f0820);
-            border: 2px solid var(--accent);
-            border-radius: 25px;
-            padding: 40px;
-            width: 100%;
-            max-width: 540px;
+            border: 2px solid var(--accent); border-radius: 25px;
+            padding: 40px; width: 100%; max-width: 540px;
             animation: slideUp 0.3s ease;
             box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-            max-height: 92vh;
-            overflow-y: auto;
+            max-height: 92vh; overflow-y: auto;
         }
 
         .modal h2 { color: var(--accent); text-align: center; margin-bottom: 25px; font-size: 1.5rem; letter-spacing: 3px; }
 
+        /* STEPS DO MODAL */
+        .steps { display: flex; justify-content: center; gap: 8px; margin-bottom: 30px; }
+
+        .step {
+            width: 35px; height: 35px; border-radius: 50%;
+            border: 2px solid rgba(107,63,160,0.4);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 0.85rem; color: rgba(255,255,255,0.4);
+            transition: all 0.3s;
+        }
+
+        .step.active {
+            background: linear-gradient(135deg, var(--purple-light), var(--accent));
+            color: black; border-color: var(--accent);
+        }
+
+        .step.done { background: rgba(37,211,102,0.2); border-color: var(--success); color: var(--success); }
+
+        .step-line { flex: 1; height: 2px; background: rgba(107,63,160,0.3); align-self: center; max-width: 40px; }
+
+        /* CONTEÚDO DAS STEPS */
+        .step-content { display: none; }
+        .step-content.active { display: block; animation: fadeIn 0.3s ease; }
+
         .modal-resumo {
             background: rgba(107,63,160,0.1);
             border: 1px solid rgba(107,63,160,0.3);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+            border-radius: 15px; padding: 20px; margin-bottom: 20px;
         }
 
         .modal-resumo p { margin: 8px 0; color: #ccc; font-size: 0.92rem; }
-
         .duracao-info { color: rgba(255,255,255,0.35); font-size: 0.78rem; margin-left: 6px; }
 
         .total-resumo {
-            color: var(--accent) !important;
-            font-size: 1.3rem !important;
-            font-weight: 900 !important;
-            margin-top: 12px !important;
-            border-top: 1px solid rgba(212,175,55,0.3);
-            padding-top: 12px !important;
+            color: var(--accent) !important; font-size: 1.3rem !important;
+            font-weight: 900 !important; margin-top: 12px !important;
+            border-top: 1px solid rgba(212,175,55,0.3); padding-top: 12px !important;
         }
 
         .modal label {
-            display: block;
-            color: var(--accent);
-            font-weight: 700;
-            margin-bottom: 8px;
-            margin-top: 18px;
-            font-size: 0.8rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
+            display: block; color: var(--accent); font-weight: 700;
+            margin-bottom: 8px; margin-top: 18px;
+            font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase;
         }
 
         .modal input {
-            width: 100%;
-            padding: 14px 18px;
-            border-radius: 12px;
+            width: 100%; padding: 14px 18px; border-radius: 12px;
             border: 1px solid rgba(107,63,160,0.4);
-            background: rgba(107,63,160,0.1);
-            color: white;
-            font-size: 1rem;
-            font-family: 'Montserrat', sans-serif;
-            transition: border 0.3s;
+            background: rgba(107,63,160,0.1); color: white;
+            font-size: 1rem; font-family: 'Montserrat', sans-serif; transition: border 0.3s;
         }
 
         .modal input:focus { outline: none; border-color: var(--accent); }
 
-        /* GRADE DE HORÁRIOS */
-        .horarios-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-top: 8px;
+        /* CARDS DE PROFISSIONAL */
+        .prof-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
+
+        .prof-card {
+            background: rgba(107,63,160,0.1);
+            border: 2px solid rgba(107,63,160,0.3);
+            border-radius: 15px; padding: 15px; cursor: pointer;
+            transition: all 0.3s; text-align: center;
+            font-family: 'Montserrat', sans-serif;
         }
+
+        .prof-card:hover { border-color: var(--accent); background: rgba(212,175,55,0.1); transform: translateY(-2px); }
+
+        .prof-card.selected {
+            background: linear-gradient(135deg, rgba(107,63,160,0.3), rgba(212,175,55,0.2));
+            border-color: var(--accent);
+            box-shadow: 0 5px 20px rgba(212,175,55,0.2);
+        }
+
+        .prof-avatar {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--purple-light), var(--accent));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; font-weight: 900; color: black;
+            margin: 0 auto 10px;
+        }
+
+        .prof-nome { color: white; font-weight: 700; font-size: 0.9rem; }
+        .prof-cat { color: rgba(255,255,255,0.4); font-size: 0.75rem; margin-top: 3px; }
+
+        /* GRADE DE HORÁRIOS */
+        .horarios-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
 
         .horario-btn {
-            padding: 10px 5px;
-            border-radius: 10px;
+            padding: 10px 5px; border-radius: 10px;
             border: 1px solid rgba(107,63,160,0.4);
-            background: rgba(107,63,160,0.1);
-            color: white;
-            font-size: 0.85rem;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            transition: all 0.2s;
-            text-align: center;
+            background: rgba(107,63,160,0.1); color: white;
+            font-size: 0.85rem; font-weight: 700; cursor: pointer;
+            font-family: 'Montserrat', sans-serif; transition: all 0.2s; text-align: center;
         }
 
-        .horario-btn:hover:not(.ocupado) {
-            border-color: var(--accent);
-            background: rgba(212,175,55,0.15);
-            transform: translateY(-2px);
-        }
+        .horario-btn:hover:not(.ocupado) { border-color: var(--accent); background: rgba(212,175,55,0.15); transform: translateY(-2px); }
 
         .horario-btn.selecionado {
             background: linear-gradient(135deg, var(--purple-light), var(--accent));
-            color: black;
-            border-color: var(--accent);
-            font-weight: 900;
+            color: black; border-color: var(--accent); font-weight: 900;
         }
 
         .horario-btn.ocupado {
-            background: rgba(255,0,0,0.08);
-            border-color: rgba(255,0,0,0.2);
-            color: rgba(255,255,255,0.25);
-            cursor: not-allowed;
-            text-decoration: line-through;
-            font-size: 0.75rem;
+            background: rgba(255,0,0,0.08); border-color: rgba(255,0,0,0.2);
+            color: rgba(255,255,255,0.25); cursor: not-allowed;
+            text-decoration: line-through; font-size: 0.75rem;
         }
 
-        .legenda-horarios {
-            display: flex;
-            gap: 15px;
-            margin-top: 12px;
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.5);
-            flex-wrap: wrap;
-        }
-
+        .legenda-horarios { display: flex; gap: 15px; margin-top: 12px; font-size: 0.75rem; color: rgba(255,255,255,0.5); flex-wrap: wrap; }
         .legenda-horarios span { display: flex; align-items: center; gap: 5px; }
         .dot { width: 10px; height: 10px; border-radius: 50%; }
         .dot-livre { background: rgba(107,63,160,0.6); }
         .dot-ocupado { background: rgba(255,0,0,0.5); }
         .dot-selecionado { background: var(--accent); }
 
-        .loading-horarios {
-            text-align: center;
-            color: rgba(255,255,255,0.4);
-            font-size: 0.85rem;
-            padding: 20px;
-        }
+        .loading-msg { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.85rem; padding: 20px; }
 
         .duracao-total {
-            background: rgba(212,175,55,0.08);
-            border: 1px solid rgba(212,175,55,0.2);
-            border-radius: 10px;
-            padding: 10px 15px;
-            margin-top: 10px;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.6);
-            text-align: center;
-            display: none;
+            background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.2);
+            border-radius: 10px; padding: 10px 15px; margin-top: 10px;
+            font-size: 0.85rem; color: rgba(255,255,255,0.6); text-align: center; display: none;
         }
 
         .duracao-total strong { color: var(--accent); }
 
         .erro-msg {
-            background: rgba(255,0,0,0.15);
-            border: 1px solid rgba(255,0,0,0.4);
-            border-radius: 10px;
-            padding: 12px;
-            color: #ff6b6b;
-            font-size: 0.9rem;
-            text-align: center;
-            margin-top: 15px;
-            display: none;
+            background: rgba(255,0,0,0.15); border: 1px solid rgba(255,0,0,0.4);
+            border-radius: 10px; padding: 12px; color: #ff6b6b;
+            font-size: 0.9rem; text-align: center; margin-top: 15px; display: none;
         }
+
+        /* BOTÕES DE NAVEGAÇÃO DO MODAL */
+        .btn-proximo {
+            background: linear-gradient(135deg, var(--purple-light), var(--accent));
+            color: black; padding: 16px; border-radius: 12px; border: none;
+            width: 100%; font-weight: 900; cursor: pointer; font-size: 1rem;
+            text-transform: uppercase; letter-spacing: 2px; margin-top: 20px;
+            font-family: 'Montserrat', sans-serif; transition: all 0.3s;
+        }
+
+        .btn-proximo:hover { transform: translateY(-2px); }
 
         .btn-whatsapp {
             background: linear-gradient(135deg, #128c3e, var(--success));
-            color: white;
-            padding: 18px;
-            border-radius: 15px;
-            border: none;
-            width: 100%;
-            font-weight: 900;
-            cursor: pointer;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 20px;
-            font-family: 'Montserrat', sans-serif;
-            box-shadow: 0 5px 20px rgba(37,211,102,0.3);
-            transition: all 0.3s;
+            color: white; padding: 18px; border-radius: 15px; border: none;
+            width: 100%; font-weight: 900; cursor: pointer; font-size: 1.1rem;
+            text-transform: uppercase; letter-spacing: 2px;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            margin-top: 20px; font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 5px 20px rgba(37,211,102,0.3); transition: all 0.3s;
         }
 
         .btn-whatsapp:hover { transform: translateY(-2px); }
 
-        .btn-cancelar {
-            background: transparent;
-            color: rgba(255,255,255,0.4);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 12px;
-            border-radius: 12px;
-            width: 100%;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin-top: 10px;
-            font-family: 'Montserrat', sans-serif;
-            transition: all 0.3s;
+        .btn-voltar {
+            background: transparent; color: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.15); padding: 12px;
+            border-radius: 12px; width: 100%; font-weight: 700;
+            cursor: pointer; font-size: 0.9rem; margin-top: 8px;
+            font-family: 'Montserrat', sans-serif; transition: all 0.3s;
         }
 
-        .btn-cancelar:hover { border-color: rgba(255,255,255,0.3); color: white; }
+        .btn-voltar:hover { border-color: rgba(255,255,255,0.3); color: white; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* MOBILE */
         @media (max-width: 600px) {
             .header-text h1 { font-size: 1.6rem; letter-spacing: 2px; }
             .logo-img { width: 65px; height: 65px; }
@@ -477,6 +346,7 @@
             .modal { padding: 20px; }
             .total-value { font-size: 1.8rem; }
             .horarios-grid { grid-template-columns: repeat(3, 1fr); }
+            .prof-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -498,7 +368,6 @@
         <h2>✨ ESCOLHA A CATEGORIA E O SERVIÇO</h2>
     </div>
 
-    <!-- 5 ABAS -->
     <div class="filter-container">
         <button class="filter-btn" onclick="filtrar('Barbearia', this)">✂️ Barbearia</button>
         <button class="filter-btn" onclick="filtrar('Salão', this)">💇 Salão</button>
@@ -511,12 +380,9 @@
         {% for item in produtos %}
         <div class="card" data-ramo="{{ item.categoria }}">
             <div class="card-img-wrapper">
-                <img
-                    src="{{ url_for('static', filename=item.imagem) }}"
-                    class="card-img"
-                    alt="{{ item.nome }}"
-                    onerror="this.style.display='none'"
-                >
+                <img src="{{ url_for('static', filename=item.imagem) }}"
+                    class="card-img" alt="{{ item.nome }}"
+                    onerror="this.style.display='none'">
             </div>
             <div class="card-content">
                 <h2 class="card-nome">{{ item.nome }}</h2>
@@ -526,6 +392,7 @@
                     data-nome="{{ item.nome }}"
                     data-preco="{{ item.preco }}"
                     data-duracao="{{ duracoes.get(item.nome, 60) }}"
+                    data-categoria="{{ item.categoria }}"
                     onclick="gerenciar(this)">
                     <i class="fas fa-plus-circle"></i> SELECIONAR
                 </button>
@@ -549,45 +416,85 @@
 <!-- MODAL -->
 <div class="modal-overlay" id="modal-overlay">
     <div class="modal">
-        <h2>📋 RESUMO DO PEDIDO</h2>
+        <h2>📋 AGENDAR SERVIÇO</h2>
 
-        <div class="modal-resumo">
-            <div id="lista-servicos"></div>
-            <p class="total-resumo" id="total-modal">Total: R$ 0,00</p>
+        <!-- STEPS -->
+        <div class="steps">
+            <div class="step active" id="step-ind-1">1</div>
+            <div class="step-line"></div>
+            <div class="step" id="step-ind-2">2</div>
+            <div class="step-line"></div>
+            <div class="step" id="step-ind-3">3</div>
         </div>
 
-        <label><i class="fas fa-user"></i> Seu Nome Completo</label>
-        <input type="text" id="input-nome" placeholder="Ex: João Silva">
+        <!-- STEP 1: RESUMO + NOME -->
+        <div class="step-content active" id="step-1">
+            <div class="modal-resumo">
+                <div id="lista-servicos"></div>
+                <p class="total-resumo" id="total-modal">Total: R$ 0,00</p>
+            </div>
+            <div class="duracao-total" id="duracao-total"></div>
 
-        <label><i class="fas fa-calendar"></i> Data Desejada</label>
-        <input type="date" id="input-data" onchange="carregarHorarios()">
+            <label><i class="fas fa-user"></i> Seu Nome Completo</label>
+            <input type="text" id="input-nome" placeholder="Ex: João Silva">
 
-        <label><i class="fas fa-clock"></i> Escolha o Horário</label>
-        <div id="horarios-container">
-            <div class="loading-horarios">📅 Selecione uma data para ver os horários disponíveis</div>
+            <button class="btn-proximo" onclick="irStep2()">
+                PRÓXIMO: ESCOLHER PROFISSIONAL →
+            </button>
+            <button class="btn-voltar" onclick="fecharModal()">✕ Cancelar</button>
         </div>
 
-        <div class="legenda-horarios">
-            <span><div class="dot dot-livre"></div> Disponível</span>
-            <span><div class="dot dot-ocupado"></div> Ocupado</span>
-            <span><div class="dot dot-selecionado"></div> Selecionado</span>
+        <!-- STEP 2: PROFISSIONAL -->
+        <div class="step-content" id="step-2">
+            <label><i class="fas fa-user-tie"></i> Escolha o Profissional</label>
+            <div id="prof-container">
+                <div class="loading-msg">⏳ Carregando profissionais...</div>
+            </div>
+
+            <div class="erro-msg" id="erro-prof"></div>
+
+            <button class="btn-proximo" onclick="irStep3()">
+                PRÓXIMO: ESCOLHER DATA E HORÁRIO →
+            </button>
+            <button class="btn-voltar" onclick="irStep1()">← Voltar</button>
         </div>
 
-        <div class="duracao-total" id="duracao-total"></div>
-        <div class="erro-msg" id="erro-msg"></div>
+        <!-- STEP 3: DATA E HORÁRIO -->
+        <div class="step-content" id="step-3">
+            <div id="prof-selecionado-info" style="background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:12px;padding:12px;text-align:center;margin-bottom:15px;">
+            </div>
 
-        <button class="btn-whatsapp" onclick="confirmarAgendamento()">
-            <i class="fab fa-whatsapp" style="font-size:1.3rem"></i> CONFIRMAR PELO WHATSAPP
-        </button>
-        <button class="btn-cancelar" onclick="fecharModal()">✕ Cancelar</button>
+            <label><i class="fas fa-calendar"></i> Data Desejada</label>
+            <input type="date" id="input-data" onchange="carregarHorarios()">
+
+            <label><i class="fas fa-clock"></i> Escolha o Horário</label>
+            <div id="horarios-container">
+                <div class="loading-msg">📅 Selecione uma data para ver os horários disponíveis</div>
+            </div>
+
+            <div class="legenda-horarios">
+                <span><div class="dot dot-livre"></div> Disponível</span>
+                <span><div class="dot dot-ocupado"></div> Ocupado</span>
+                <span><div class="dot dot-selecionado"></div> Selecionado</span>
+            </div>
+
+            <div class="erro-msg" id="erro-msg"></div>
+
+            <button class="btn-whatsapp" onclick="confirmarAgendamento()">
+                <i class="fab fa-whatsapp" style="font-size:1.3rem"></i> CONFIRMAR PELO WHATSAPP
+            </button>
+            <button class="btn-voltar" onclick="irStep2()">← Voltar</button>
+        </div>
     </div>
 </div>
 
 <script>
-    let selecionados = [];
-    let total = 0;
+    let selecionados      = [];
+    let total             = 0;
     let horarioSelecionado = null;
-    const WHATSAPP = '5524981196037';
+    let profSelecionado   = null;
+    let categoriaAtual    = 'Barbearia';
+    const WHATSAPP        = '5524981196037';
 
     const TODOS_HORARIOS = [];
     for (let h = 8; h < 19; h++) {
@@ -603,6 +510,7 @@
     };
 
     function filtrar(ramo, btn) {
+        categoriaAtual = ramo;
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         document.querySelectorAll('.card').forEach(card => {
@@ -611,13 +519,14 @@
     }
 
     function gerenciar(btn) {
-        const nome    = btn.dataset.nome;
-        const preco   = parseFloat(btn.dataset.preco);
-        const duracao = parseInt(btn.dataset.duracao);
-        const idx     = selecionados.findIndex(s => s.nome === nome);
+        const nome     = btn.dataset.nome;
+        const preco    = parseFloat(btn.dataset.preco);
+        const duracao  = parseInt(btn.dataset.duracao);
+        const categoria = btn.dataset.categoria;
+        const idx      = selecionados.findIndex(s => s.nome === nome);
 
         if (idx === -1) {
-            selecionados.push({ nome, preco, duracao });
+            selecionados.push({ nome, preco, duracao, categoria });
             total += preco;
             btn.innerHTML = '<i class="fas fa-check-circle"></i> SELECIONADO';
             btn.classList.add('selected');
@@ -632,17 +541,10 @@
     }
 
     function abrirModal() {
-        if (selecionados.length === 0) {
-            alert("Selecione pelo menos um serviço primeiro!");
-            return;
-        }
+        if (selecionados.length === 0) { alert("Selecione pelo menos um serviço primeiro!"); return; }
 
         const duracaoTotal = selecionados.reduce((acc, s) => acc + s.duracao, 0);
-        const horas   = Math.floor(duracaoTotal / 60);
-        const minutos = duracaoTotal % 60;
-        const duracaoStr = horas > 0
-            ? `${horas}h${minutos > 0 ? minutos + 'min' : ''}`
-            : `${minutos}min`;
+        const duracaoStr   = formatarDuracao(duracaoTotal);
 
         document.getElementById('lista-servicos').innerHTML = selecionados.map(s =>
             `<p>✅ <strong>${s.nome}</strong>
@@ -656,11 +558,15 @@
         divDuracao.innerHTML = `⏳ Tempo total estimado: <strong>${duracaoStr}</strong>`;
         divDuracao.style.display = 'block';
 
+        // Reset
+        profSelecionado    = null;
         horarioSelecionado = null;
-        document.getElementById('input-data').value = '';
+        document.getElementById('input-nome').value  = '';
+        document.getElementById('input-data').value  = '';
         document.getElementById('horarios-container').innerHTML =
-            '<div class="loading-horarios">📅 Selecione uma data para ver os horários disponíveis</div>';
-        document.getElementById('erro-msg').style.display = 'none';
+            '<div class="loading-msg">📅 Selecione uma data para ver os horários disponíveis</div>';
+
+        irStep1();
         document.getElementById('modal-overlay').classList.add('open');
     }
 
@@ -668,18 +574,106 @@
         document.getElementById('modal-overlay').classList.remove('open');
     }
 
+    function irStep1() {
+        setStep(1);
+    }
+
+    async function irStep2() {
+        const nome = document.getElementById('input-nome').value.trim();
+        if (!nome) { mostrarErro('erro-prof', 'Por favor, informe seu nome!'); return; }
+
+        setStep(2);
+
+        // Descobre categorias dos serviços selecionados
+        const categorias = [...new Set(selecionados.map(s => s.categoria))];
+
+        const container = document.getElementById('prof-container');
+        container.innerHTML = '<div class="loading-msg">⏳ Carregando profissionais...</div>';
+
+        try {
+            // Busca profissionais de todas as categorias selecionadas
+            const promises = categorias.map(cat =>
+                fetch(`/profissionais?categoria=${encodeURIComponent(cat)}`).then(r => r.json())
+            );
+            const resultados = await Promise.all(promises);
+            const todos = resultados.flatMap(r => r.profissionais || []);
+
+            // Remove duplicados por ID
+            const unicos = todos.filter((p, i, arr) => arr.findIndex(x => x.id === p.id) === i);
+
+            if (unicos.length === 0) {
+                container.innerHTML = '<div class="loading-msg">⚠️ Nenhum profissional disponível.</div>';
+                return;
+            }
+
+            const grid = document.createElement('div');
+            grid.className = 'prof-grid';
+
+            unicos.forEach(prof => {
+                const card = document.createElement('div');
+                card.className = 'prof-card';
+                if (profSelecionado && profSelecionado.id === prof.id) card.classList.add('selected');
+
+                card.innerHTML = `
+                    <div class="prof-avatar">${prof.nome.charAt(0)}</div>
+                    <div class="prof-nome">${prof.nome}</div>
+                `;
+                card.onclick = () => selecionarProfissional(prof, card);
+                grid.appendChild(card);
+            });
+
+            container.innerHTML = '';
+            container.appendChild(grid);
+
+        } catch(e) {
+            container.innerHTML = '<div class="loading-msg">⚠️ Erro ao carregar. Tente novamente.</div>';
+        }
+    }
+
+    function selecionarProfissional(prof, card) {
+        document.querySelectorAll('.prof-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        profSelecionado = prof;
+        document.getElementById('erro-prof').style.display = 'none';
+    }
+
+    function irStep3() {
+        if (!profSelecionado) { mostrarErro('erro-prof', 'Por favor, selecione um profissional!'); return; }
+
+        setStep(3);
+
+        document.getElementById('prof-selecionado-info').innerHTML =
+            `👤 Profissional: <strong style="color:var(--accent)">${profSelecionado.nome}</strong>`;
+
+        // Reseta data/horário
+        horarioSelecionado = null;
+        document.getElementById('input-data').value = '';
+        document.getElementById('horarios-container').innerHTML =
+            '<div class="loading-msg">📅 Selecione uma data para ver os horários disponíveis</div>';
+    }
+
+    function setStep(n) {
+        [1,2,3].forEach(i => {
+            document.getElementById(`step-${i}`).classList.toggle('active', i === n);
+            const ind = document.getElementById(`step-ind-${i}`);
+            ind.classList.remove('active', 'done');
+            if (i < n)  ind.classList.add('done');
+            if (i === n) ind.classList.add('active');
+        });
+    }
+
     async function carregarHorarios() {
         const data = document.getElementById('input-data').value;
-        if (!data) return;
+        if (!data || !profSelecionado) return;
 
         horarioSelecionado = null;
         const container = document.getElementById('horarios-container');
-        container.innerHTML = '<div class="loading-horarios">⏳ Verificando disponibilidade...</div>';
+        container.innerHTML = '<div class="loading-msg">⏳ Verificando disponibilidade...</div>';
 
         try {
-            const params = selecionados.map(s => `servico=${encodeURIComponent(s.nome)}`).join('&');
-            const res    = await fetch(`/horarios-ocupados?data=${data}&${params}`);
-            const dados  = await res.json();
+            const params  = selecionados.map(s => `servico=${encodeURIComponent(s.nome)}`).join('&');
+            const res     = await fetch(`/horarios-ocupados?data=${data}&profissional_id=${profSelecionado.id}&${params}`);
+            const dados   = await res.json();
             const ocupados = new Set(dados.ocupados || []);
 
             const grid = document.createElement('div');
@@ -703,7 +697,7 @@
             container.appendChild(grid);
 
         } catch(e) {
-            container.innerHTML = '<div class="loading-horarios">⚠️ Erro ao carregar. Tente novamente.</div>';
+            container.innerHTML = '<div class="loading-msg">⚠️ Erro ao carregar. Tente novamente.</div>';
         }
     }
 
@@ -718,52 +712,47 @@
         const nome = document.getElementById('input-nome').value.trim();
         const data = document.getElementById('input-data').value;
 
-        if (!nome)               { mostrarErro('Por favor, informe seu nome!'); return; }
-        if (!data)               { mostrarErro('Por favor, selecione a data!'); return; }
-        if (!horarioSelecionado) { mostrarErro('Por favor, selecione um horário disponível!'); return; }
+        if (!data)               { mostrarErro('erro-msg', 'Por favor, selecione a data!'); return; }
+        if (!horarioSelecionado) { mostrarErro('erro-msg', 'Por favor, selecione um horário!'); return; }
 
         try {
             const res = await fetch('/agendar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    cliente:  nome,
-                    servicos: selecionados.map(s => s.nome),
-                    data:     data,
-                    horario:  horarioSelecionado,
-                    total:    total
+                    cliente:           nome,
+                    servicos:          selecionados.map(s => s.nome),
+                    data:              data,
+                    horario:           horarioSelecionado,
+                    total:             total,
+                    profissional_id:   profSelecionado.id,
+                    profissional_nome: profSelecionado.nome
                 })
             });
 
             const dados = await res.json();
 
             if (!res.ok) {
-                mostrarErro(dados.error || 'Horário indisponível. Escolha outro.');
+                mostrarErro('erro-msg', dados.error || 'Horário indisponível. Escolha outro.');
                 carregarHorarios();
                 return;
             }
 
             // Monta mensagem WhatsApp
             const duracaoTotal = selecionados.reduce((acc, s) => acc + s.duracao, 0);
-            const horas   = Math.floor(duracaoTotal / 60);
-            const minutos = duracaoTotal % 60;
-            const duracaoStr = horas > 0
-                ? `${horas}h${minutos > 0 ? minutos + 'min' : ''}`
-                : `${minutos}min`;
-
-            const servicos = selecionados.map(s =>
+            const servicos     = selecionados.map(s =>
                 `  • ${s.nome} (${s.duracao}min) — R$ ${s.preco.toFixed(2).replace('.',',')}`
             ).join('\n');
-
             const [ano, mes, dia] = data.split('-');
 
             const msg =
 `🗓️ *NOVO AGENDAMENTO - PJ STUDIO*
 
 👤 *Cliente:* ${nome}
+💼 *Profissional:* ${profSelecionado.nome}
 📅 *Data:* ${dia}/${mes}/${ano}
 🕐 *Horário:* ${horarioSelecionado}
-⏳ *Duração estimada:* ${duracaoStr}
+⏳ *Duração estimada:* ${formatarDuracao(duracaoTotal)}
 
 ✨ *Serviços:*
 ${servicos}
@@ -776,12 +765,18 @@ _Agendamento confirmado pelo PJ Agende Pro_ ⭐`;
             fecharModal();
 
         } catch(e) {
-            mostrarErro('Erro de conexão. Verifique sua internet.');
+            mostrarErro('erro-msg', 'Erro de conexão. Verifique sua internet.');
         }
     }
 
-    function mostrarErro(msg) {
-        const el = document.getElementById('erro-msg');
+    function formatarDuracao(minutos) {
+        const h = Math.floor(minutos / 60);
+        const m = minutos % 60;
+        return h > 0 ? `${h}h${m > 0 ? m + 'min' : ''}` : `${m}min`;
+    }
+
+    function mostrarErro(id, msg) {
+        const el = document.getElementById(id);
         el.innerText = '⚠️ ' + msg;
         el.style.display = 'block';
     }
