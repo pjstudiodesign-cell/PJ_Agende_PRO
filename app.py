@@ -177,15 +177,18 @@ def agendar():
 # ROTAS DO PAINEL ADMIN
 # =====================================================
 
-@app.route('/admin')
+@app.route('/admin', methods=['GET'])
 def admin_login():
     if session.get('admin_logado'):
         return redirect(url_for('admin_painel'))
     return render_template('admin.html', pagina='login')
 
 
-@app.route('/admin/login', methods=['POST'])
+@app.route('/admin/login', methods=['GET', 'POST'])
 def admin_fazer_login():
+    if request.method == 'GET':
+        return redirect(url_for('admin_login'))
+
     dados   = request.get_json()
     usuario = dados.get('usuario')
     senha   = dados.get('senha')
@@ -198,7 +201,7 @@ def admin_fazer_login():
             .execute()
 
         if resp.data:
-            session['admin_logado'] = True
+            session['admin_logado']  = True
             session['admin_usuario'] = usuario
             return jsonify({'success': True})
         else:
@@ -207,13 +210,13 @@ def admin_fazer_login():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/admin/logout')
+@app.route('/admin/logout', methods=['GET'])
 def admin_logout():
     session.clear()
     return redirect(url_for('admin_login'))
 
 
-@app.route('/admin/painel')
+@app.route('/admin/painel', methods=['GET'])
 @login_required
 def admin_painel():
     return render_template('admin.html', pagina='painel')
@@ -298,8 +301,9 @@ def admin_editar_profissional(id):
     dados = request.get_json()
     try:
         update = {}
-        if 'nome'  in dados: update['nome']  = dados['nome']
-        if 'ativo' in dados: update['ativo'] = dados['ativo']
+        if 'nome'      in dados: update['nome']      = dados['nome']
+        if 'ativo'     in dados: update['ativo']     = dados['ativo']
+        if 'categoria' in dados: update['categoria'] = dados['categoria']
         supabase.table('profissionais').update(update).eq('id', id).execute()
         return jsonify({'success': True})
     except Exception as e:
