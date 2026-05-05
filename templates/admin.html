@@ -126,6 +126,7 @@
             font-size: 0.85rem; font-weight: 700; transition: all 0.3s;
             padding: 12px 15px; border-radius: 10px;
             border: 1px solid rgba(255,255,255,0.1);
+            text-decoration: none;
         }
 
         .btn-logout:hover { color: var(--danger); border-color: var(--danger); }
@@ -212,9 +213,7 @@
         .btn:hover   { transform: translateY(-1px); opacity: 0.9; }
 
         /* FILTRO DE DATA */
-        .filtro-data {
-            display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
-        }
+        .filtro-data { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
         .filtro-data input {
             padding: 10px 15px; border-radius: 10px;
@@ -255,7 +254,6 @@
         }
 
         .modal-box input:focus, .modal-box select:focus { outline: none; border-color: var(--accent); }
-
         .modal-box select option { background: #1a0a2e; }
 
         .modal-btns { display: flex; gap: 10px; margin-top: 25px; }
@@ -319,23 +317,31 @@ async function fazerLogin() {
     const senha   = document.getElementById('input-senha').value.trim();
     const erro    = document.getElementById('login-erro');
 
-    if (!usuario || !senha) { erro.innerText = '⚠️ Preencha todos os campos!'; erro.style.display = 'block'; return; }
+    erro.style.display = 'none';
+
+    if (!usuario || !senha) {
+        erro.innerText = '⚠️ Preencha todos os campos!';
+        erro.style.display = 'block';
+        return;
+    }
 
     try {
-        const res   = await fetch('/admin/login', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
+        const res = await fetch('/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ usuario, senha })
         });
+
         const dados = await res.json();
 
-        if (res.ok) {
+        if (res.ok && dados.success) {
             window.location.href = '/admin/painel';
         } else {
-            erro.innerText = '⚠️ ' + (dados.error || 'Erro ao fazer login');
+            erro.innerText = '⚠️ ' + (dados.error || 'Usuário ou senha incorretos');
             erro.style.display = 'block';
         }
     } catch(e) {
-        erro.innerText = '⚠️ Erro de conexão.';
+        erro.innerText = '⚠️ Erro de conexão. Tente novamente.';
         erro.style.display = 'block';
     }
 }
@@ -353,16 +359,16 @@ async function fazerLogin() {
             <p>PAINEL ADMIN</p>
         </div>
 
-        <div class="nav-item active" onclick="irPara('dashboard')">
+        <div class="nav-item active" id="nav-dashboard" onclick="irPara('dashboard', this)">
             <i class="fas fa-chart-pie"></i> Dashboard
         </div>
-        <div class="nav-item" onclick="irPara('agendamentos')">
+        <div class="nav-item" id="nav-agendamentos" onclick="irPara('agendamentos', this)">
             <i class="fas fa-calendar-check"></i> Agendamentos
         </div>
-        <div class="nav-item" onclick="irPara('servicos')">
+        <div class="nav-item" id="nav-servicos" onclick="irPara('servicos', this)">
             <i class="fas fa-scissors"></i> Serviços
         </div>
-        <div class="nav-item" onclick="irPara('profissionais')">
+        <div class="nav-item" id="nav-profissionais" onclick="irPara('profissionais', this)">
             <i class="fas fa-user-tie"></i> Profissionais
         </div>
 
@@ -408,7 +414,7 @@ async function fazerLogin() {
 
             <div class="table-wrapper">
                 <div class="table-header">
-                    <h3>📋 PRÓXIMOS AGENDAMENTOS DE HOJE</h3>
+                    <h3>📋 AGENDAMENTOS DE HOJE</h3>
                 </div>
                 <div id="tabela-dashboard"></div>
             </div>
@@ -516,8 +522,6 @@ async function fazerLogin() {
 </div>
 
 <script>
-    let secaoAtual = 'dashboard';
-
     window.onload = () => {
         const hoje = new Date();
         document.getElementById('data-hoje').innerText =
@@ -526,12 +530,11 @@ async function fazerLogin() {
         carregarDashboard();
     };
 
-    function irPara(secao) {
-        secaoAtual = secao;
+    function irPara(secao, el) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById(`sec-${secao}`).classList.add('active');
-        event.currentTarget.classList.add('active');
+        el.classList.add('active');
 
         if (secao === 'agendamentos')  carregarAgendamentos();
         if (secao === 'servicos')      carregarServicos();
@@ -541,7 +544,6 @@ async function fazerLogin() {
     // ---- DASHBOARD ----
     async function carregarDashboard() {
         const hoje = new Date().toISOString().split('T')[0];
-
         try {
             const [resHoje, resTodos, resProfs] = await Promise.all([
                 fetch(`/admin/agendamentos?data=${hoje}`).then(r => r.json()),
@@ -549,33 +551,25 @@ async function fazerLogin() {
                 fetch('/admin/profissionais').then(r => r.json())
             ]);
 
-            const agHoje   = resHoje.agendamentos   || [];
-            const agTodos  = resTodos.agendamentos  || [];
-            const profs    = resProfs.profissionais || [];
+            const agHoje  = resHoje.agendamentos   || [];
+            const agTodos = resTodos.agendamentos  || [];
+            const profs   = resProfs.profissionais || [];
 
-            // Stats
             document.getElementById('stat-hoje').innerText = agHoje.length;
 
-            // Semana
             const inicioSemana = new Date();
             inicioSemana.setDate(inicioSemana.getDate() - inicioSemana.getDay());
             const agSemana = agTodos.filter(a => new Date(a.data) >= inicioSemana);
             document.getElementById('stat-semana').innerText = agSemana.length;
 
-            // Faturamento hoje (soma totais únicos por cliente+horario)
             const fatHoje = agHoje.reduce((acc, a) => acc + (parseFloat(a.total) || 0), 0);
             document.getElementById('stat-faturamento').innerText = `R$${fatHoje.toFixed(0)}`;
 
-            // Profissionais ativos
             const ativos = profs.filter(p => p.ativo).length;
             document.getElementById('stat-profissionais').innerText = ativos;
 
-            // Tabela hoje
             renderTabelaAgendamentos(agHoje, 'tabela-dashboard', false);
-
-        } catch(e) {
-            console.error(e);
-        }
+        } catch(e) { console.error(e); }
     }
 
     // ---- AGENDAMENTOS ----
@@ -602,32 +596,26 @@ async function fazerLogin() {
             return;
         }
 
-        const [ano, mes, dia] = ['','',''];
         container.innerHTML = `
             <table>
                 <thead>
                     <tr>
-                        <th>Data</th>
-                        <th>Horário</th>
-                        <th>Cliente</th>
-                        <th>Serviço</th>
-                        <th>Profissional</th>
-                        <th>Total</th>
+                        <th>Data</th><th>Horário</th><th>Cliente</th>
+                        <th>Serviço</th><th>Profissional</th><th>Total</th>
                         ${mostrarAcoes ? '<th>Ação</th>' : ''}
                     </tr>
                 </thead>
                 <tbody>
                     ${ags.map(a => {
-                        const partes = a.data ? a.data.split('-') : ['','',''];
+                        const partes = (a.data || '').split('-');
                         const dataFmt = partes.length === 3 ? `${partes[2]}/${partes[1]}/${partes[0]}` : a.data;
-                        return `
-                        <tr>
+                        return `<tr>
                             <td>${dataFmt}</td>
-                            <td><strong style="color:var(--accent)">${a.horario ? a.horario.substring(0,5) : ''}</strong></td>
-                            <td>${a.cliente || ''}</td>
-                            <td>${a.servico || ''}</td>
-                            <td>${a.profissional_nome || '—'}</td>
-                            <td style="color:var(--accent);font-weight:700">R$ ${parseFloat(a.total || 0).toFixed(2).replace('.',',')}</td>
+                            <td><strong style="color:var(--accent)">${(a.horario||'').substring(0,5)}</strong></td>
+                            <td>${a.cliente||''}</td>
+                            <td>${a.servico||''}</td>
+                            <td>${a.profissional_nome||'—'}</td>
+                            <td style="color:var(--accent);font-weight:700">R$ ${parseFloat(a.total||0).toFixed(2).replace('.',',')}</td>
                             ${mostrarAcoes ? `<td><button class="btn btn-danger" onclick="cancelarAgendamento(${a.id})"><i class="fas fa-trash"></i> Cancelar</button></td>` : ''}
                         </tr>`;
                     }).join('')}
@@ -658,12 +646,9 @@ async function fazerLogin() {
 
             container.innerHTML = `
                 <table>
-                    <thead>
-                        <tr><th>Categoria</th><th>Serviço</th><th>Preço</th><th>Ação</th></tr>
-                    </thead>
+                    <thead><tr><th>Categoria</th><th>Serviço</th><th>Preço</th><th>Ação</th></tr></thead>
                     <tbody>
-                        ${svcs.map(s => `
-                        <tr>
+                        ${svcs.map(s => `<tr>
                             <td><span class="badge badge-ativo">${s.categoria}</span></td>
                             <td>${s.nome}</td>
                             <td style="color:var(--accent);font-weight:700">R$ ${parseFloat(s.preco).toFixed(2).replace('.',',')}</td>
@@ -686,19 +671,14 @@ async function fazerLogin() {
         const id    = document.getElementById('edit-servico-id').value;
         const nome  = document.getElementById('edit-servico-nome').value.trim();
         const preco = document.getElementById('edit-servico-preco').value;
-
         if (!nome || !preco) { alert('Preencha todos os campos!'); return; }
-
         try {
             await fetch(`/admin/servicos/${id}`, {
                 method: 'PUT', headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nome, preco })
             });
             document.getElementById('msg-servico').style.display = 'block';
-            setTimeout(() => {
-                fecharModal('modal-servico');
-                carregarServicos();
-            }, 1200);
+            setTimeout(() => { fecharModal('modal-servico'); carregarServicos(); }, 1200);
         } catch(e) { alert('Erro ao salvar.'); }
     }
 
@@ -716,12 +696,9 @@ async function fazerLogin() {
 
             container.innerHTML = `
                 <table>
-                    <thead>
-                        <tr><th>Nome</th><th>Categoria</th><th>Status</th><th>Ações</th></tr>
-                    </thead>
+                    <thead><tr><th>Nome</th><th>Categoria</th><th>Status</th><th>Ações</th></tr></thead>
                     <tbody>
-                        ${profs.map(p => `
-                        <tr>
+                        ${profs.map(p => `<tr>
                             <td><strong>${p.nome}</strong></td>
                             <td>${p.categoria}</td>
                             <td><span class="badge ${p.ativo ? 'badge-ativo' : 'badge-inativo'}">${p.ativo ? 'ATIVO' : 'INATIVO'}</span></td>
@@ -739,19 +716,19 @@ async function fazerLogin() {
     }
 
     function abrirModalProfissional() {
-        document.getElementById('modal-prof-titulo').innerText = '➕ NOVO PROFISSIONAL';
-        document.getElementById('edit-prof-id').value       = '';
-        document.getElementById('edit-prof-nome').value     = '';
-        document.getElementById('edit-prof-categoria').value = 'Barbearia';
+        document.getElementById('modal-prof-titulo').innerText   = '➕ NOVO PROFISSIONAL';
+        document.getElementById('edit-prof-id').value            = '';
+        document.getElementById('edit-prof-nome').value          = '';
+        document.getElementById('edit-prof-categoria').value     = 'Barbearia';
         document.getElementById('msg-profissional').style.display = 'none';
         document.getElementById('modal-profissional').classList.add('open');
     }
 
     function editarProfissional(p) {
-        document.getElementById('modal-prof-titulo').innerText   = '✏️ EDITAR PROFISSIONAL';
-        document.getElementById('edit-prof-id').value            = p.id;
-        document.getElementById('edit-prof-nome').value          = p.nome;
-        document.getElementById('edit-prof-categoria').value     = p.categoria;
+        document.getElementById('modal-prof-titulo').innerText    = '✏️ EDITAR PROFISSIONAL';
+        document.getElementById('edit-prof-id').value             = p.id;
+        document.getElementById('edit-prof-nome').value           = p.nome;
+        document.getElementById('edit-prof-categoria').value      = p.categoria;
         document.getElementById('msg-profissional').style.display = 'none';
         document.getElementById('modal-profissional').classList.add('open');
     }
@@ -760,9 +737,7 @@ async function fazerLogin() {
         const id        = document.getElementById('edit-prof-id').value;
         const nome      = document.getElementById('edit-prof-nome').value.trim();
         const categoria = document.getElementById('edit-prof-categoria').value;
-
         if (!nome) { alert('Informe o nome!'); return; }
-
         try {
             if (id) {
                 await fetch(`/admin/profissionais/${id}`, {
