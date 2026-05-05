@@ -184,14 +184,23 @@ def admin_login():
     return render_template('admin.html', pagina='login')
 
 
+# CORREÇÃO CIRÚRGICA: aceita GET e POST, processa JSON no POST
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_fazer_login():
     if request.method == 'GET':
         return redirect(url_for('admin_login'))
 
-    dados   = request.get_json()
-    usuario = dados.get('usuario')
-    senha   = dados.get('senha')
+    # POST — tenta JSON primeiro, depois form data
+    try:
+        dados = request.get_json(force=True, silent=True) or {}
+        usuario = dados.get('usuario', '')
+        senha   = dados.get('senha', '')
+    except Exception:
+        usuario = ''
+        senha   = ''
+
+    if not usuario or not senha:
+        return jsonify({'error': 'Usuário e senha são obrigatórios'}), 400
 
     try:
         resp = supabase.table('admins') \
@@ -259,7 +268,7 @@ def admin_get_servicos():
 @app.route('/admin/servicos/<int:id>', methods=['PUT'])
 @login_required
 def admin_editar_servico(id):
-    dados = request.get_json()
+    dados = request.get_json(force=True, silent=True) or {}
     try:
         update = {}
         if 'nome'  in dados: update['nome']  = dados['nome']
@@ -283,7 +292,7 @@ def admin_get_profissionais():
 @app.route('/admin/profissionais', methods=['POST'])
 @login_required
 def admin_add_profissional():
-    dados = request.get_json()
+    dados = request.get_json(force=True, silent=True) or {}
     try:
         supabase.table('profissionais').insert({
             'nome':      dados['nome'],
@@ -298,7 +307,7 @@ def admin_add_profissional():
 @app.route('/admin/profissionais/<int:id>', methods=['PUT'])
 @login_required
 def admin_editar_profissional(id):
-    dados = request.get_json()
+    dados = request.get_json(force=True, silent=True) or {}
     try:
         update = {}
         if 'nome'      in dados: update['nome']      = dados['nome']
