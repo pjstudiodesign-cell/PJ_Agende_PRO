@@ -1,12 +1,14 @@
 import os
-from flask import Flask, render_template, send_from_directory, request, jsonify
+from flask import Flask, render_template, send_from_directory, request, jsonify, redirect, url_for
 from supabase import create_client, Client
 from datetime import datetime, timedelta
+from functools import wraps
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+SUPABASE_URL  = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY  = os.environ.get("SUPABASE_KEY")
+ADMIN_TOKEN   = os.environ.get("ADMIN_TOKEN", "pjstudio2024token")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # =====================================================
@@ -46,6 +48,24 @@ def get_slots_bloqueados(horario_inicio_str, duracao_minutos):
         elapsed += 30
     return slots
 
+
+def token_valido():
+    token = request.headers.get('X-Admin-Token') or request.args.get('token')
+    return token == ADMIN_TOKEN
+
+
+def admin_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not token_valido():
+            return jsonify({'error': 'Não autorizado'}), 401
+        return f(*args, **kwargs)
+    return decorated
+
+
+# =====================================================
+# ROTAS PÚBLICAS — INALTERADAS
+# =====================================================
 
 @app.route('/')
 def index():
@@ -152,6 +172,144 @@ def agendar():
                 'profissional_nome': profissional_nome
             }).execute()
 
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# =====================================================
+# ROTAS DO PAINEL ADMIN
+# =====================================================
+
+@app.route('/admin', methods=['GET'])
+def admin_login():
+    return render_template('admin.html', pagina='login')
+
+
+@app.route('/admin/login', methods=['POST'])
+def admin_fazer_login():
+    dados   = request.get_json(force=True, silent=True) or {}
+    usuario = dados.get('usuario', '').strip()
+    senha   = dados.get('senha', '').strip()
+
+    if not usuario or not senha:
+        return jsonify({'error': 'Preencha todos os campos'}), 400
+
+    try:
+        resp = supabase.table('admins') \
+            .select('id') \
+            .eq('usuario', usuario) \
+            .eq('senha', senha) \
+            .execute()
+
+        if resp.data:
+            return jsonify({'success': True, 'token': ADMIN_TOKEN})
+        return jsonify({'error': 'Usuário ou senha incorretos'}), 401
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/admin/painel', methods=['GET'])
+def admin_painel():
+    token = request.args.get('token', '')
+    if token != ADMIN_TOKEN:
+        return redirect(url_for('admin_login'))
+    return render_template('admin.html', pagina='painel', token=token)
+
+
+@app.route('/admin/agendamentos', methods=['GET'])
+@admin_required
+def admin_agendamentos():
+    data_filtro = request.args.get('data')
+    try:
+        query = supabase.table('agendamentos').select("*").order('data').order('horario')
+        if data_filtro:
+            query = query.eq('data', data_filtro)
+        resp = query.execute()
+        return jsonify({'agendamentos': resp.data})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/admin/agendamentos/<int:id>', methods=['DELETE'])
+@admin_required
+def admin_cancelar_agendamento(id):
+    try:
+        supabase.table('agendamentos').delete().eq('id', id).execute()
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/admin/servicos', methods=['GET'])
+@admin_required
+def admin_get_servicos():
+    try:
+        resp = supabase.table('produtos').select("*").order('categoria').execute()
+        return jsonify({'servicos': resp.data})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/admin/servicos/<int:id>', methods=['PUT'])
+@admin_required
+def admin_editar_servico(id):
+    dados = request.get_json(force=True, silent=True) or {}
+    try:
+        update = {}
+        if 'nome'  in dados: update['nome']  = dados['nome']
+        if 'preco' in dados: update['preco'] = float(dados['preco'])
+        supabase.table('produtos').update(update).eq('id', id).execute()
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/admin/profissionais', methods=['GET'])
+@admin_required
+def admin_get_profissionais():
+    try:
+        resp = supabase.table('profissionais').select("*").order('categoria').execute()
+        return jsonify({'profissionais': resp.data})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/admin/profissionais', methods=['POST'])
+@admin_required
+def admin_add_profissional():
+    dados = request.get_json(force=True, silent=True) or {}
+    try:
+        supabase.table('profissionais').insert({
+            'nome':      dados['nome'],
+            'categoria': dados['categoria'],
+            'ativo':     True
+        }).execute()
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/admin/profissionais/<int:id>', methods=['PUT'])
+@admin_required
+def admin_editar_profissional(id):
+    dados = request.get_json(force=True, silent=True) or {}
+    try:
+        update = {}
+        if 'nome'      in dados: update['nome']      = dados['nome']
+        if 'ativo'     in dados: update['ativo']     = dados['ativo']
+        if 'categoria' in dados: update['categoria'] = dados['categoria']
+        supabase.table('profissionais').update(update).eq('id', id).execute()
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/admin/profissionais/<int:id>', methods=['DELETE'])
+@admin_required
+def admin_deletar_profissional(id):
+    try:
+        supabase.table('profissionais').delete().eq('id', id).execute()
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
