@@ -1,15 +1,17 @@
 import os
-from flask import Flask, render_template, send_from_directory, request, jsonify, session, redirect, url_for
+from flask import Flask, render_template, send_from_directory, request, jsonify, redirect, url_for
 from supabase import create_client, Client
 from datetime import datetime, timedelta
 from functools import wraps
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
-app.secret_key = os.environ.get("SECRET_KEY", "pjstudio_secret_2024")
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# Token fixo de admin — simples e funcional no Render gratuito
+ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "pjstudio2024token")
 
 # =====================================================
 # DURAÇÃO EM MINUTOS DE CADA SERVIÇO
@@ -49,11 +51,17 @@ def get_slots_bloqueados(horario_inicio_str, duracao_minutos):
     return slots
 
 
+def token_valido():
+    """Verifica token no header ou query string."""
+    token = request.headers.get('X-Admin-Token') or request.args.get('token')
+    return token == ADMIN_TOKEN
+
+
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if not session.get('admin_logado'):
-            return redirect(url_for('admin_login'))
+        if not token_valido():
+            return jsonify({'error': 'Não autorizado'}), 401
         return f(*args, **kwargs)
     return decorated
 
@@ -96,7 +104,6 @@ def get_profissionais():
 def horarios_ocupados():
     data            = request.args.get('data')
     profissional_id = request.args.get('profissional_id')
-    servicos        = request.args.getlist('servico')
 
     if not data or not profissional_id:
         return jsonify({'error': 'data e profissional_id são obrigatórios'}), 400
@@ -123,7 +130,7 @@ def horarios_ocupados():
 
 @app.route('/agendar', methods=['POST'])
 def agendar():
-    dados             = request.get_json()
+    dados             = request.get_json(force=True, silent=True) or {}
     cliente           = dados.get('cliente')
     servicos          = dados.get('servicos')
     data              = dados.get('data')
@@ -179,25 +186,14 @@ def agendar():
 
 @app.route('/admin', methods=['GET'])
 def admin_login():
-    if session.get('admin_logado'):
-        return redirect(url_for('admin_painel'))
     return render_template('admin.html', pagina='login')
 
 
-# CORREÇÃO CIRÚRGICA: aceita GET e POST, processa JSON no POST
-@app.route('/admin/login', methods=['GET', 'POST'])
+@app.route('/admin/login', methods=['POST'])
 def admin_fazer_login():
-    if request.method == 'GET':
-        return redirect(url_for('admin_login'))
-
-    # POST — tenta JSON primeiro, depois form data
-    try:
-        dados = request.get_json(force=True, silent=True) or {}
-        usuario = dados.get('usuario', '')
-        senha   = dados.get('senha', '')
-    except Exception:
-        usuario = ''
-        senha   = ''
+    dados   = request.get_json(force=True, silent=True) or {}
+    usuario = dados.get('usuario', '')
+    senha   = dados.get('senha', '')
 
     if not usuario or not senha:
         return jsonify({'error': 'Usuário e senha são obrigatórios'}), 400
@@ -210,25 +206,19 @@ def admin_fazer_login():
             .execute()
 
         if resp.data:
-            session['admin_logado']  = True
-            session['admin_usuario'] = usuario
-            return jsonify({'success': True})
+            return jsonify({'success': True, 'token': ADMIN_TOKEN})
         else:
             return jsonify({'error': 'Usuário ou senha incorretos'}), 401
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/admin/logout', methods=['GET'])
-def admin_logout():
-    session.clear()
-    return redirect(url_for('admin_login'))
-
-
 @app.route('/admin/painel', methods=['GET'])
-@login_required
 def admin_painel():
-    return render_template('admin.html', pagina='painel')
+    token = request.args.get('token', '')
+    if token != ADMIN_TOKEN:
+        return redirect(url_for('admin_login'))
+    return render_template('admin.html', pagina='painel', token=token)
 
 
 @app.route('/admin/agendamentos', methods=['GET'])
