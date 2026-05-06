@@ -25,7 +25,7 @@
             color: white;
         }
 
-        /* LOGIN */
+        /* ===== LOGIN ===== */
         .login-wrapper {
             display: flex; align-items: center; justify-content: center;
             min-height: 100vh; padding: 20px;
@@ -33,17 +33,14 @@
 
         .login-box {
             background: linear-gradient(145deg, #1a1025, #0f0820);
-            border: 2px solid var(--accent);
-            border-radius: 25px; padding: 50px 40px;
-            width: 100%; max-width: 420px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-            text-align: center;
+            border: 2px solid var(--accent); border-radius: 25px;
+            padding: 50px 40px; width: 100%; max-width: 420px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6); text-align: center;
         }
 
         .login-box img {
             width: 80px; height: 80px; border-radius: 18px;
-            border: 2px solid var(--accent); margin-bottom: 20px;
-            object-fit: cover;
+            border: 2px solid var(--accent); margin-bottom: 20px; object-fit: cover;
         }
 
         .login-box h1 { color: var(--accent); font-size: 1.8rem; letter-spacing: 4px; margin-bottom: 5px; }
@@ -51,8 +48,7 @@
 
         .login-box label {
             display: block; color: var(--accent); font-size: 0.75rem;
-            letter-spacing: 3px; font-weight: 700; margin-bottom: 8px;
-            margin-top: 20px; text-align: left;
+            letter-spacing: 3px; font-weight: 700; margin-bottom: 8px; margin-top: 20px; text-align: left;
         }
 
         .login-box input {
@@ -80,20 +76,18 @@
             font-size: 0.85rem; margin-top: 15px; display: none;
         }
 
-        /* PAINEL */
+        /* ===== PAINEL ===== */
         .painel { display: flex; min-height: 100vh; }
 
         .sidebar {
             width: 260px; background: linear-gradient(180deg, #0a0015, #1a0a2e);
             border-right: 1px solid rgba(212,175,55,0.2);
-            padding: 30px 0; flex-shrink: 0;
-            display: flex; flex-direction: column;
+            padding: 30px 0; flex-shrink: 0; display: flex; flex-direction: column;
         }
 
         .sidebar-logo {
             text-align: center; padding: 0 20px 30px;
-            border-bottom: 1px solid rgba(212,175,55,0.2);
-            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(212,175,55,0.2); margin-bottom: 20px;
         }
 
         .sidebar-logo img { width: 60px; height: 60px; border-radius: 14px; border: 2px solid var(--accent); object-fit: cover; }
@@ -115,10 +109,9 @@
 
         .btn-logout {
             display: flex; align-items: center; gap: 10px;
-            color: rgba(255,255,255,0.4); cursor: pointer;
-            font-size: 0.85rem; font-weight: 700; transition: all 0.3s;
-            padding: 12px 15px; border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.1); text-decoration: none;
+            color: rgba(255,255,255,0.4); cursor: pointer; font-size: 0.85rem;
+            font-weight: 700; transition: all 0.3s; padding: 12px 15px;
+            border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); text-decoration: none;
         }
 
         .btn-logout:hover { color: var(--danger); border-color: var(--danger); }
@@ -136,12 +129,11 @@
 
         .stat-card {
             background: linear-gradient(145deg, #1a1025, #0f0820);
-            border: 1px solid rgba(107,63,160,0.3);
-            border-radius: 18px; padding: 25px; text-align: center;
+            border: 1px solid rgba(107,63,160,0.3); border-radius: 18px; padding: 25px; text-align: center;
         }
 
-        .stat-card .stat-icon { font-size: 2rem; margin-bottom: 10px; }
-        .stat-card .stat-num  { color: var(--accent); font-size: 2.5rem; font-weight: 900; line-height: 1; }
+        .stat-card .stat-icon  { font-size: 2rem; margin-bottom: 10px; }
+        .stat-card .stat-num   { color: var(--accent); font-size: 2.5rem; font-weight: 900; line-height: 1; }
         .stat-card .stat-label { color: rgba(255,255,255,0.5); font-size: 0.8rem; letter-spacing: 2px; margin-top: 5px; }
 
         .section { display: none; }
@@ -149,14 +141,12 @@
 
         .table-wrapper {
             background: linear-gradient(145deg, #1a1025, #0f0820);
-            border: 1px solid rgba(107,63,160,0.3);
-            border-radius: 18px; overflow: hidden;
+            border: 1px solid rgba(107,63,160,0.3); border-radius: 18px; overflow: hidden;
         }
 
         .table-header {
-            padding: 20px 25px; display: flex;
-            justify-content: space-between; align-items: center;
-            border-bottom: 1px solid rgba(107,63,160,0.3); flex-wrap: wrap; gap: 10px;
+            padding: 20px 25px; display: flex; justify-content: space-between;
+            align-items: center; border-bottom: 1px solid rgba(107,63,160,0.3); flex-wrap: wrap; gap: 10px;
         }
 
         .table-header h3 { color: var(--accent); font-size: 1rem; letter-spacing: 2px; }
@@ -164,9 +154,8 @@
         table { width: 100%; border-collapse: collapse; }
 
         th {
-            padding: 15px 20px; text-align: left;
-            color: rgba(255,255,255,0.4); font-size: 0.75rem;
-            letter-spacing: 2px; text-transform: uppercase;
+            padding: 15px 20px; text-align: left; color: rgba(255,255,255,0.4);
+            font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
             border-bottom: 1px solid rgba(107,63,160,0.2);
         }
 
@@ -183,9 +172,9 @@
         .badge-inativo { background: rgba(231,76,60,0.15);  color: var(--danger);  border: 1px solid rgba(231,76,60,0.3); }
 
         .btn {
-            padding: 8px 16px; border-radius: 8px; border: none;
-            cursor: pointer; font-weight: 700; font-size: 0.8rem;
-            font-family: 'Montserrat', sans-serif; transition: all 0.2s; letter-spacing: 1px;
+            padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer;
+            font-weight: 700; font-size: 0.8rem; font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s; letter-spacing: 1px;
         }
 
         .btn-primary { background: linear-gradient(135deg, var(--purple-light), var(--accent)); color: black; }
@@ -204,8 +193,7 @@
         }
 
         .modal-overlay {
-            display: none; position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.85); z-index: 2000;
             justify-content: center; align-items: center; padding: 20px;
         }
@@ -215,8 +203,7 @@
         .modal-box {
             background: linear-gradient(145deg, #1a1025, #0f0820);
             border: 2px solid var(--accent); border-radius: 20px;
-            padding: 35px; width: 100%; max-width: 440px;
-            animation: slideUp 0.3s ease;
+            padding: 35px; width: 100%; max-width: 440px; animation: slideUp 0.3s ease;
         }
 
         .modal-box h3 { color: var(--accent); margin-bottom: 25px; font-size: 1.2rem; letter-spacing: 2px; }
@@ -271,10 +258,11 @@
         <p>PAINEL ADMINISTRATIVO</p>
 
         <label>USUÁRIO</label>
-        <input type="text" id="input-usuario" placeholder="admin">
+        <input type="text" id="input-usuario" placeholder="admin" autocomplete="username">
 
         <label>SENHA</label>
         <input type="password" id="input-senha" placeholder="••••••••"
+            autocomplete="current-password"
             onkeypress="if(event.key==='Enter') fazerLogin()">
 
         <button class="btn-login" onclick="fazerLogin()">
@@ -299,15 +287,15 @@ async function fazerLogin() {
     }
 
     try {
-        const res  = await fetch('/admin/login', {
+        const res = await fetch('/admin/login', {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify({ usuario, senha })
         });
+
         const dados = await res.json();
 
         if (res.ok && dados.success) {
-            // Redireciona com token na URL
             window.location.href = '/admin/painel?token=' + dados.token;
         } else {
             erro.innerText = '⚠️ ' + (dados.error || 'Usuário ou senha incorretos');
@@ -331,16 +319,16 @@ async function fazerLogin() {
             <p>PAINEL ADMIN</p>
         </div>
 
-        <div class="nav-item active" id="nav-dashboard" onclick="irPara('dashboard', this)">
+        <div class="nav-item active" onclick="irPara('dashboard', this)">
             <i class="fas fa-chart-pie"></i> Dashboard
         </div>
-        <div class="nav-item" id="nav-agendamentos" onclick="irPara('agendamentos', this)">
+        <div class="nav-item" onclick="irPara('agendamentos', this)">
             <i class="fas fa-calendar-check"></i> Agendamentos
         </div>
-        <div class="nav-item" id="nav-servicos" onclick="irPara('servicos', this)">
+        <div class="nav-item" onclick="irPara('servicos', this)">
             <i class="fas fa-scissors"></i> Serviços
         </div>
-        <div class="nav-item" id="nav-profissionais" onclick="irPara('profissionais', this)">
+        <div class="nav-item" onclick="irPara('profissionais', this)">
             <i class="fas fa-user-tie"></i> Profissionais
         </div>
 
@@ -472,12 +460,12 @@ async function fazerLogin() {
 </div>
 
 <script>
-    // Pega token da URL
+    // Token vindo da URL
     const TOKEN = new URLSearchParams(window.location.search).get('token') || '';
 
-    // Headers padrão com token
-    const headers = {
-        'Content-Type': 'application/json',
+    // Headers padrão para todas as chamadas admin
+    const H = {
+        'Content-Type':  'application/json',
         'X-Admin-Token': TOKEN
     };
 
@@ -492,49 +480,51 @@ async function fazerLogin() {
     function irPara(secao, el) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(`sec-${secao}`).classList.add('active');
+        document.getElementById('sec-' + secao).classList.add('active');
         el.classList.add('active');
         if (secao === 'agendamentos')  carregarAgendamentos();
         if (secao === 'servicos')      carregarServicos();
         if (secao === 'profissionais') carregarProfissionais();
     }
 
+    // ---- DASHBOARD ----
     async function carregarDashboard() {
         const hoje = new Date().toISOString().split('T')[0];
         try {
-            const [resHoje, resTodos, resProfs] = await Promise.all([
-                fetch(`/admin/agendamentos?data=${hoje}`, { headers }).then(r => r.json()),
-                fetch('/admin/agendamentos', { headers }).then(r => r.json()),
-                fetch('/admin/profissionais', { headers }).then(r => r.json())
+            const [rH, rT, rP] = await Promise.all([
+                fetch('/admin/agendamentos?data=' + hoje, { headers: H }).then(r => r.json()),
+                fetch('/admin/agendamentos',              { headers: H }).then(r => r.json()),
+                fetch('/admin/profissionais',             { headers: H }).then(r => r.json())
             ]);
 
-            const agHoje  = resHoje.agendamentos   || [];
-            const agTodos = resTodos.agendamentos  || [];
-            const profs   = resProfs.profissionais || [];
+            const agHoje  = rH.agendamentos   || [];
+            const agTodos = rT.agendamentos   || [];
+            const profs   = rP.profissionais  || [];
 
             document.getElementById('stat-hoje').innerText = agHoje.length;
 
-            const inicioSemana = new Date();
-            inicioSemana.setDate(inicioSemana.getDate() - inicioSemana.getDay());
+            const ini = new Date();
+            ini.setDate(ini.getDate() - ini.getDay());
             document.getElementById('stat-semana').innerText =
-                agTodos.filter(a => new Date(a.data) >= inicioSemana).length;
+                agTodos.filter(a => new Date(a.data) >= ini).length;
 
             const fat = agHoje.reduce((acc, a) => acc + (parseFloat(a.total) || 0), 0);
-            document.getElementById('stat-faturamento').innerText = `R$${fat.toFixed(0)}`;
+            document.getElementById('stat-faturamento').innerText = 'R$' + fat.toFixed(0);
             document.getElementById('stat-profissionais').innerText = profs.filter(p => p.ativo).length;
 
             renderTabela(agHoje, 'tabela-dashboard', false);
         } catch(e) { console.error(e); }
     }
 
+    // ---- AGENDAMENTOS ----
     async function carregarAgendamentos() {
         const data = document.getElementById('filtro-data-ag').value;
-        const url  = data ? `/admin/agendamentos?data=${data}` : '/admin/agendamentos';
+        const url  = data ? '/admin/agendamentos?data=' + data : '/admin/agendamentos';
         try {
-            const res = await fetch(url, { headers }).then(r => r.json());
-            const ags = res.agendamentos || [];
-            document.getElementById('total-ag').innerText = `${ags.length} registro(s)`;
-            renderTabela(ags, 'tabela-agendamentos', true);
+            const r  = await fetch(url, { headers: H }).then(r => r.json());
+            const ag = r.agendamentos || [];
+            document.getElementById('total-ag').innerText = ag.length + ' registro(s)';
+            renderTabela(ag, 'tabela-agendamentos', true);
         } catch(e) { console.error(e); }
     }
 
@@ -543,52 +533,50 @@ async function fazerLogin() {
         carregarAgendamentos();
     }
 
-    function renderTabela(ags, containerId, mostrarAcoes) {
-        const c = document.getElementById(containerId);
+    function renderTabela(ags, cId, acoes) {
+        const c = document.getElementById(cId);
         if (!ags.length) {
             c.innerHTML = '<div class="empty-state"><i class="fas fa-calendar-times"></i>Nenhum agendamento encontrado</div>';
             return;
         }
-        c.innerHTML = `<table><thead><tr>
-            <th>Data</th><th>Horário</th><th>Cliente</th><th>Serviço</th><th>Profissional</th><th>Total</th>
-            ${mostrarAcoes ? '<th>Ação</th>' : ''}
-        </tr></thead><tbody>
-        ${ags.map(a => {
-            const p = (a.data||'').split('-');
-            const d = p.length===3 ? `${p[2]}/${p[1]}/${p[0]}` : a.data;
-            return `<tr>
-                <td>${d}</td>
-                <td><strong style="color:var(--accent)">${(a.horario||'').substring(0,5)}</strong></td>
-                <td>${a.cliente||''}</td>
-                <td>${a.servico||''}</td>
-                <td>${a.profissional_nome||'—'}</td>
-                <td style="color:var(--accent);font-weight:700">R$ ${parseFloat(a.total||0).toFixed(2).replace('.',',')}</td>
-                ${mostrarAcoes ? `<td><button class="btn btn-danger" onclick="cancelarAgendamento(${a.id})"><i class="fas fa-trash"></i> Cancelar</button></td>` : ''}
-            </tr>`;
-        }).join('')}
-        </tbody></table>`;
+        c.innerHTML = '<table><thead><tr>'
+            + '<th>Data</th><th>Horário</th><th>Cliente</th><th>Serviço</th><th>Profissional</th><th>Total</th>'
+            + (acoes ? '<th>Ação</th>' : '') + '</tr></thead><tbody>'
+            + ags.map(a => {
+                const p = (a.data || '').split('-');
+                const d = p.length === 3 ? p[2]+'/'+p[1]+'/'+p[0] : a.data;
+                return '<tr>'
+                    + '<td>' + d + '</td>'
+                    + '<td><strong style="color:var(--accent)">' + (a.horario||'').substring(0,5) + '</strong></td>'
+                    + '<td>' + (a.cliente||'') + '</td>'
+                    + '<td>' + (a.servico||'') + '</td>'
+                    + '<td>' + (a.profissional_nome||'—') + '</td>'
+                    + '<td style="color:var(--accent);font-weight:700">R$ ' + parseFloat(a.total||0).toFixed(2).replace('.',',') + '</td>'
+                    + (acoes ? '<td><button class="btn btn-danger" onclick="cancelarAgendamento(' + a.id + ')"><i class="fas fa-trash"></i> Cancelar</button></td>' : '')
+                    + '</tr>';
+            }).join('') + '</tbody></table>';
     }
 
     async function cancelarAgendamento(id) {
         if (!confirm('Cancelar este agendamento?')) return;
-        await fetch(`/admin/agendamentos/${id}`, { method: 'DELETE', headers });
+        await fetch('/admin/agendamentos/' + id, { method: 'DELETE', headers: H });
         carregarAgendamentos();
         carregarDashboard();
     }
 
+    // ---- SERVIÇOS ----
     async function carregarServicos() {
-        const res  = await fetch('/admin/servicos', { headers }).then(r => r.json());
-        const svcs = res.servicos || [];
+        const r    = await fetch('/admin/servicos', { headers: H }).then(r => r.json());
+        const svcs = r.servicos || [];
         const c    = document.getElementById('tabela-servicos');
         if (!svcs.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-scissors"></i>Nenhum serviço</div>'; return; }
-        c.innerHTML = `<table><thead><tr><th>Categoria</th><th>Serviço</th><th>Preço</th><th>Ação</th></tr></thead><tbody>
-        ${svcs.map(s => `<tr>
-            <td><span class="badge badge-ativo">${s.categoria}</span></td>
-            <td>${s.nome}</td>
-            <td style="color:var(--accent);font-weight:700">R$ ${parseFloat(s.preco).toFixed(2).replace('.',',')}</td>
-            <td><button class="btn btn-warning" onclick='abrirModalServico(${JSON.stringify(s)})'><i class="fas fa-edit"></i> Editar</button></td>
-        </tr>`).join('')}
-        </tbody></table>`;
+        c.innerHTML = '<table><thead><tr><th>Categoria</th><th>Serviço</th><th>Preço</th><th>Ação</th></tr></thead><tbody>'
+            + svcs.map(s => '<tr>'
+                + '<td><span class="badge badge-ativo">' + s.categoria + '</span></td>'
+                + '<td>' + s.nome + '</td>'
+                + '<td style="color:var(--accent);font-weight:700">R$ ' + parseFloat(s.preco).toFixed(2).replace('.',',') + '</td>'
+                + '<td><button class="btn btn-warning" onclick=\'abrirModalServico(' + JSON.stringify(s) + ')\'><i class="fas fa-edit"></i> Editar</button></td>'
+                + '</tr>').join('') + '</tbody></table>';
     }
 
     function abrirModalServico(s) {
@@ -604,30 +592,28 @@ async function fazerLogin() {
         const nome  = document.getElementById('edit-servico-nome').value.trim();
         const preco = document.getElementById('edit-servico-preco').value;
         if (!nome || !preco) { alert('Preencha todos os campos!'); return; }
-        await fetch(`/admin/servicos/${id}`, { method: 'PUT', headers, body: JSON.stringify({ nome, preco }) });
+        await fetch('/admin/servicos/' + id, { method: 'PUT', headers: H, body: JSON.stringify({ nome, preco }) });
         document.getElementById('msg-servico').style.display = 'block';
         setTimeout(() => { fecharModal('modal-servico'); carregarServicos(); }, 1200);
     }
 
+    // ---- PROFISSIONAIS ----
     async function carregarProfissionais() {
-        const res   = await fetch('/admin/profissionais', { headers }).then(r => r.json());
-        const profs = res.profissionais || [];
+        const r     = await fetch('/admin/profissionais', { headers: H }).then(r => r.json());
+        const profs = r.profissionais || [];
         const c     = document.getElementById('tabela-profissionais');
         if (!profs.length) { c.innerHTML = '<div class="empty-state"><i class="fas fa-user-slash"></i>Nenhum profissional</div>'; return; }
-        c.innerHTML = `<table><thead><tr><th>Nome</th><th>Categoria</th><th>Status</th><th>Ações</th></tr></thead><tbody>
-        ${profs.map(p => `<tr>
-            <td><strong>${p.nome}</strong></td>
-            <td>${p.categoria}</td>
-            <td><span class="badge ${p.ativo ? 'badge-ativo' : 'badge-inativo'}">${p.ativo ? 'ATIVO' : 'INATIVO'}</span></td>
-            <td style="display:flex;gap:8px;flex-wrap:wrap">
-                <button class="btn btn-warning" onclick='editarProfissional(${JSON.stringify(p)})'><i class="fas fa-edit"></i> Editar</button>
-                <button class="btn ${p.ativo ? 'btn-danger' : 'btn-success'}" onclick="toggleProfissional(${p.id},${p.ativo})">
-                    <i class="fas fa-${p.ativo ? 'ban' : 'check'}"></i> ${p.ativo ? 'Desativar' : 'Ativar'}
-                </button>
-                <button class="btn btn-danger" onclick="deletarProfissional(${p.id})"><i class="fas fa-trash"></i></button>
-            </td>
-        </tr>`).join('')}
-        </tbody></table>`;
+        c.innerHTML = '<table><thead><tr><th>Nome</th><th>Categoria</th><th>Status</th><th>Ações</th></tr></thead><tbody>'
+            + profs.map(p => '<tr>'
+                + '<td><strong>' + p.nome + '</strong></td>'
+                + '<td>' + p.categoria + '</td>'
+                + '<td><span class="badge ' + (p.ativo ? 'badge-ativo' : 'badge-inativo') + '">' + (p.ativo ? 'ATIVO' : 'INATIVO') + '</span></td>'
+                + '<td style="display:flex;gap:8px;flex-wrap:wrap">'
+                + '<button class="btn btn-warning" onclick=\'editarProfissional(' + JSON.stringify(p) + ')\'><i class="fas fa-edit"></i> Editar</button>'
+                + '<button class="btn ' + (p.ativo ? 'btn-danger' : 'btn-success') + '" onclick="toggleProfissional(' + p.id + ',' + p.ativo + ')">'
+                + '<i class="fas fa-' + (p.ativo ? 'ban' : 'check') + '"></i> ' + (p.ativo ? 'Desativar' : 'Ativar') + '</button>'
+                + '<button class="btn btn-danger" onclick="deletarProfissional(' + p.id + ')"><i class="fas fa-trash"></i></button>'
+                + '</td></tr>').join('') + '</tbody></table>';
     }
 
     function abrirModalProfissional() {
@@ -653,21 +639,21 @@ async function fazerLogin() {
         const nome      = document.getElementById('edit-prof-nome').value.trim();
         const categoria = document.getElementById('edit-prof-categoria').value;
         if (!nome) { alert('Informe o nome!'); return; }
-        const url    = id ? `/admin/profissionais/${id}` : '/admin/profissionais';
+        const url    = id ? '/admin/profissionais/' + id : '/admin/profissionais';
         const method = id ? 'PUT' : 'POST';
-        await fetch(url, { method, headers, body: JSON.stringify({ nome, categoria }) });
+        await fetch(url, { method, headers: H, body: JSON.stringify({ nome, categoria }) });
         document.getElementById('msg-profissional').style.display = 'block';
         setTimeout(() => { fecharModal('modal-profissional'); carregarProfissionais(); }, 1200);
     }
 
     async function toggleProfissional(id, ativo) {
-        await fetch(`/admin/profissionais/${id}`, { method: 'PUT', headers, body: JSON.stringify({ ativo: !ativo }) });
+        await fetch('/admin/profissionais/' + id, { method: 'PUT', headers: H, body: JSON.stringify({ ativo: !ativo }) });
         carregarProfissionais();
     }
 
     async function deletarProfissional(id) {
         if (!confirm('Remover este profissional?')) return;
-        await fetch(`/admin/profissionais/${id}`, { method: 'DELETE', headers });
+        await fetch('/admin/profissionais/' + id, { method: 'DELETE', headers: H });
         carregarProfissionais();
     }
 
