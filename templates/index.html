@@ -399,6 +399,71 @@
             50% { transform: scale(1.1); }
         }
 
+        /* MODAL ACESSO ADMIN */
+        .admin-overlay {
+            display: none; position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.92); z-index: 4000;
+            justify-content: center; align-items: center;
+            padding: 20px; backdrop-filter: blur(8px);
+        }
+
+        .admin-overlay.open { display: flex; animation: fadeIn 0.3s ease; }
+
+        .admin-box {
+            background: linear-gradient(145deg, #1a1025, #0f0820);
+            border: 2px solid var(--accent); border-radius: 20px;
+            padding: 40px 35px; width: 100%; max-width: 360px;
+            text-align: center; animation: slideUp 0.3s ease;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 30px rgba(212,175,55,0.15);
+        }
+
+        .admin-box img {
+            width: 65px; height: 65px; border-radius: 14px;
+            border: 2px solid var(--accent); margin-bottom: 15px; object-fit: cover;
+        }
+
+        .admin-box h3 { color: var(--accent); font-size: 1.1rem; letter-spacing: 3px; margin-bottom: 5px; }
+        .admin-box p  { color: rgba(255,255,255,0.4); font-size: 0.78rem; letter-spacing: 2px; margin-bottom: 25px; }
+
+        .admin-box input {
+            width: 100%; padding: 14px 18px; border-radius: 12px;
+            border: 1px solid rgba(107,63,160,0.4);
+            background: rgba(107,63,160,0.1); color: white;
+            font-size: 1rem; font-family: 'Montserrat', sans-serif;
+            text-align: center; letter-spacing: 3px; margin-bottom: 15px;
+        }
+
+        .admin-box input:focus { outline: none; border-color: var(--accent); }
+
+        .btn-admin-entrar {
+            background: linear-gradient(135deg, var(--purple-light), var(--accent));
+            color: black; padding: 14px; border-radius: 12px; border: none;
+            width: 100%; font-weight: 900; cursor: pointer; font-size: 0.95rem;
+            text-transform: uppercase; letter-spacing: 2px;
+            font-family: 'Montserrat', sans-serif; transition: all 0.3s;
+        }
+
+        .btn-admin-entrar:hover { transform: translateY(-2px); }
+
+        .btn-admin-cancelar {
+            background: transparent; color: rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.1); padding: 10px;
+            border-radius: 10px; width: 100%; cursor: pointer;
+            font-size: 0.85rem; margin-top: 10px;
+            font-family: 'Montserrat', sans-serif; transition: all 0.3s;
+        }
+
+        .btn-admin-cancelar:hover { color: white; border-color: rgba(255,255,255,0.3); }
+
+        .admin-erro {
+            background: rgba(231,76,60,0.15); border: 1px solid rgba(231,76,60,0.4);
+            border-radius: 8px; padding: 10px; color: #ff6b6b;
+            font-size: 0.82rem; margin-bottom: 12px; display: none;
+        }
+
+        .logo-img { cursor: pointer; }
+
         @media (max-width: 600px) {
             .header-text h1 { font-size: 1.6rem; letter-spacing: 2px; }
             .logo-img { width: 65px; height: 65px; }
@@ -417,7 +482,7 @@
 
 <header>
     <div class="header-inner">
-        <img src="{{ url_for('static', filename='logo.jpg') }}" class="logo-img" alt="PJ Studio">
+        <img src="{{ url_for('static', filename='logo.jpg') }}" class="logo-img" alt="PJ Studio" onclick="abrirAdmin()">
         <div class="header-text">
             <h1>PJ AGENDE PRO</h1>
             <p>SISTEMA DE ALTA PERFORMANCE</p>
@@ -893,6 +958,75 @@ _Agendamento confirmado pelo PJ Agende Pro_ ⭐`;
         </button>
     </div>
 </div>
+
+
+<!-- MODAL ACESSO ADMIN -->
+<div class="admin-overlay" id="admin-overlay">
+    <div class="admin-box">
+        <img src="{{ url_for('static', filename='logo.jpg') }}" alt="Logo">
+        <h3>ACESSO RESTRITO</h3>
+        <p>PAINEL ADMINISTRATIVO</p>
+        <div class="admin-erro" id="admin-erro"></div>
+        <input type="password" id="admin-senha" placeholder="••••••••"
+            onkeypress="if(event.key==='Enter') verificarAdmin()">
+        <button class="btn-admin-entrar" onclick="verificarAdmin()">
+            <i class="fas fa-lock"></i> ENTRAR
+        </button>
+        <button class="btn-admin-cancelar" onclick="fecharAdmin()">Cancelar</button>
+    </div>
+</div>
+
+<script>
+    const ADMIN_SENHA = 'pjstudio2024';
+
+    function abrirAdmin() {
+        document.getElementById('admin-senha').value = '';
+        document.getElementById('admin-erro').style.display = 'none';
+        document.getElementById('admin-overlay').classList.add('open');
+        setTimeout(() => document.getElementById('admin-senha').focus(), 300);
+    }
+
+    function fecharAdmin() {
+        document.getElementById('admin-overlay').classList.remove('open');
+    }
+
+    async function verificarAdmin() {
+        const senha = document.getElementById('admin-senha').value.trim();
+        const erro  = document.getElementById('admin-erro');
+        erro.style.display = 'none';
+
+        if (!senha) {
+            erro.innerText = '⚠️ Digite a senha!';
+            erro.style.display = 'block';
+            return;
+        }
+
+        try {
+            const res  = await fetch('/admin/login', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ usuario: 'admin', senha: senha })
+            });
+            const dados = await res.json();
+
+            if (res.ok && dados.success) {
+                window.open('/admin/painel?token=' + dados.token, '_blank');
+                fecharAdmin();
+            } else {
+                erro.innerText = '⚠️ Senha incorreta!';
+                erro.style.display = 'block';
+                document.getElementById('admin-senha').value = '';
+            }
+        } catch(e) {
+            erro.innerText = '⚠️ Erro de conexão.';
+            erro.style.display = 'block';
+        }
+    }
+
+    document.getElementById('admin-overlay').addEventListener('click', function(e) {
+        if (e.target === this) fecharAdmin();
+    });
+</script>
 
 </body>
 </html>
