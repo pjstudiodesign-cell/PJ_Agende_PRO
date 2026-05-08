@@ -840,6 +840,7 @@
         const nome = document.getElementById('input-nome').value.trim();
         const data = document.getElementById('input-data').value;
 
+        if (!nome)               { mostrarErro('erro-msg', 'Por favor, informe seu nome!'); return; }
         if (!data)               { mostrarErro('erro-msg', 'Por favor, selecione a data!'); return; }
         if (!horarioSelecionado) { mostrarErro('erro-msg', 'Por favor, selecione um horário!'); return; }
 
@@ -889,7 +890,9 @@ ${servicos}
 
 _Agendamento confirmado pelo PJ Agende Pro_ ⭐`;
 
-            window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, '_blank');
+            // Abre WhatsApp — usa href para funcionar no celular e no PC
+            const urlWpp = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
+            window.location.href = urlWpp;
             mostrarConfirmacao(nome, profSelecionado.nome, data, horarioSelecionado, selecionados, total.toFixed(2).replace('.',','));
 
         } catch(e) {
