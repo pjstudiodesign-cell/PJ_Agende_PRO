@@ -172,6 +172,18 @@ def agendar():
                 'profissional_nome': profissional_nome
             }).execute()
 
+        # Salva dados do agendamento para notificação
+        agendamento_notif = {
+            'cliente': cliente,
+            'profissional': profissional_nome,
+            'data': data,
+            'horario': horario,
+            'servicos': servicos,
+            'total': float(total)
+        }
+        app.config['ULTIMO_AGENDAMENTO'] = agendamento_notif
+        app.config['AGENDAMENTO_ID'] = app.config.get('AGENDAMENTO_ID', 0) + 1
+
         return jsonify({'success': True})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -207,6 +219,21 @@ def admin_fazer_login():
         return jsonify({'error': 'Usuário ou senha incorretos'}), 401
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
+@app.route('/admin/checar-agendamento', methods=['GET'])
+@admin_required
+def admin_checar_agendamento():
+    """Retorna o último agendamento novo para notificação por polling."""
+    ultimo_id   = int(request.args.get('ultimo_id', 0))
+    atual_id    = app.config.get('AGENDAMENTO_ID', 0)
+    if atual_id > ultimo_id:
+        return jsonify({
+            'novo': True,
+            'id': atual_id,
+            'dados': app.config.get('ULTIMO_AGENDAMENTO', {})
+        })
+    return jsonify({'novo': False, 'id': atual_id})
 
 
 @app.route('/admin/painel', methods=['GET'])
