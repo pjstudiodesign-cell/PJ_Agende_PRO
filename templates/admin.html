@@ -409,19 +409,20 @@ async function fazerLogin() {
 
     <div class="content">
 
+        <!-- BARRA DE NOTIFICAÇÕES — SEMPRE VISÍVEL -->
+        <div class="notif-bar" id="notif-bar">
+            <p id="notif-status">🔔 <strong>Ativar notificações</strong> para receber alertas de novos agendamentos</p>
+            <button class="btn-notif" id="btn-notif" onclick="ativarNotificacoes()">
+                <i class="fas fa-bell"></i> ATIVAR NOTIFICAÇÕES
+            </button>
+        </div>
+
         <!-- DASHBOARD -->
         <div class="section active" id="sec-dashboard">
             <div class="content-header">
                 <h1>📊 DASHBOARD</h1>
                 <span style="color:rgba(255,255,255,0.4);font-size:0.85rem" id="data-hoje"></span>
             </div>
-            <div class="notif-bar" id="notif-bar">
-                <p id="notif-status">🔔 <strong>Ativar notificações</strong> para receber alertas de novos agendamentos</p>
-                <button class="btn-notif" id="btn-notif" onclick="ativarNotificacoes()">
-                    <i class="fas fa-bell"></i> ATIVAR NOTIFICAÇÕES
-                </button>
-            </div>
-
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">📅</div>
@@ -825,13 +826,15 @@ async function fazerLogin() {
     }
 
     // Verifica se notificações já foram ativadas anteriormente
+    // Inicia polling silencioso SEM esconder o botão
     window.addEventListener('load', () => {
         if ('Notification' in window && Notification.permission === 'granted') {
             pollingAtivo = true;
+            iniciarPolling();
+            // Atualiza visual do botão sem esconder
             document.getElementById('btn-notif').innerHTML   = '<i class="fas fa-bell"></i> NOTIFICAÇÕES ATIVAS';
             document.getElementById('btn-notif').classList.add('ativo');
             document.getElementById('notif-status').innerHTML = '✅ <strong>Notificações ativas!</strong> Você receberá alertas de novos agendamentos.';
-            iniciarPolling();
         }
     });
 </script>
