@@ -238,6 +238,31 @@
         @keyframes fadeIn  { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+
+        /* NOTIFICAÇÕES */
+        .notif-bar {
+            background: linear-gradient(135deg, rgba(107,63,160,0.2), rgba(212,175,55,0.1));
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 12px; padding: 12px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 25px; flex-wrap: wrap; gap: 10px;
+        }
+
+        .notif-bar p { color: rgba(255,255,255,0.7); font-size: 0.82rem; }
+        .notif-bar strong { color: var(--accent); }
+
+        .btn-notif {
+            background: linear-gradient(135deg, var(--purple-light), var(--accent));
+            color: black; padding: 10px 20px; border-radius: 10px; border: none;
+            font-weight: 900; cursor: pointer; font-size: 0.82rem;
+            text-transform: uppercase; letter-spacing: 1px;
+            font-family: 'Montserrat', sans-serif; transition: all 0.3s;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .btn-notif:hover { transform: translateY(-1px); }
+        .btn-notif.ativo { background: linear-gradient(135deg, #128c3e, #25d366); color: white; }
+
         @media (max-width: 768px) {
             /* LAYOUT */
             .painel { flex-direction: column; }
@@ -390,6 +415,13 @@ async function fazerLogin() {
                 <h1>📊 DASHBOARD</h1>
                 <span style="color:rgba(255,255,255,0.4);font-size:0.85rem" id="data-hoje"></span>
             </div>
+            <div class="notif-bar" id="notif-bar">
+                <p id="notif-status">🔔 <strong>Ativar notificações</strong> para receber alertas de novos agendamentos</p>
+                <button class="btn-notif" id="btn-notif" onclick="ativarNotificacoes()">
+                    <i class="fas fa-bell"></i> ATIVAR NOTIFICAÇÕES
+                </button>
+            </div>
+
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">📅</div>
@@ -704,6 +736,103 @@ async function fazerLogin() {
 
     document.querySelectorAll('.modal-overlay').forEach(m => {
         m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+    });
+
+    // =====================================================
+    // SISTEMA DE NOTIFICAÇÕES — POLLING
+    // =====================================================
+    let ultimoAgendamentoId = 0;
+    let pollingAtivo        = false;
+    let pollingInterval     = null;
+
+    async function ativarNotificacoes() {
+        if (!('Notification' in window)) {
+            alert('Seu navegador não suporta notificações.');
+            return;
+        }
+
+        const permissao = await Notification.requestPermission();
+
+        if (permissao === 'granted') {
+            pollingAtivo = true;
+            document.getElementById('btn-notif').innerHTML   = '<i class="fas fa-bell"></i> NOTIFICAÇÕES ATIVAS';
+            document.getElementById('btn-notif').classList.add('ativo');
+            document.getElementById('notif-status').innerHTML = '✅ <strong>Notificações ativas!</strong> Você receberá alertas de novos agendamentos.';
+            iniciarPolling();
+        } else {
+            alert('Permissão negada. Ative nas configurações do navegador.');
+        }
+    }
+
+    function iniciarPolling() {
+        // Pega o ID atual para não notificar agendamentos antigos
+        fetch('/admin/checar-agendamento?ultimo_id=0', { headers: H })
+            .then(r => r.json())
+            .then(d => { ultimoAgendamentoId = d.id; });
+
+        // Verifica a cada 15 segundos
+        pollingInterval = setInterval(verificarNovoAgendamento, 15000);
+    }
+
+    async function verificarNovoAgendamento() {
+        try {
+            const res  = await fetch('/admin/checar-agendamento?ultimo_id=' + ultimoAgendamentoId, { headers: H });
+            const dados = await res.json();
+
+            if (dados.novo) {
+                ultimoAgendamentoId = dados.id;
+                const d = dados.dados;
+
+                // Monta texto da notificação
+                const servicos = Array.isArray(d.servicos) ? d.servicos.join(', ') : d.servicos;
+                const [ano, mes, dia] = (d.data || '').split('-');
+                const dataFmt = dia ? dia+'/'+mes+'/'+ano : d.data;
+
+                const notif = new Notification('🗓️ NOVO AGENDAMENTO!', {
+                    body: `👤 ${d.cliente}\n💼 ${d.profissional}\n📅 ${dataFmt} às ${(d.horario||'').substring(0,5)}\n✂️ ${servicos}\n💰 R$ ${parseFloat(d.total||0).toFixed(2).replace('.',',')}`,
+                    icon: '/static/logo.jpg',
+                    badge: '/static/logo.jpg',
+                    tag: 'agendamento-' + dados.id,
+                    requireInteraction: true
+                });
+
+                notif.onclick = () => {
+                    window.focus();
+                    notif.close();
+                    // Recarrega agendamentos
+                    carregarDashboard();
+                    irPara('agendamentos', document.getElementById('nav-agendamentos'));
+                };
+
+                // Toca som de alerta
+                try {
+                    const ctx = new AudioContext();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.frequency.value = 880;
+                    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.5);
+                } catch(e) {}
+
+                // Atualiza dashboard
+                carregarDashboard();
+            }
+        } catch(e) { console.error('Polling erro:', e); }
+    }
+
+    // Verifica se notificações já foram ativadas anteriormente
+    window.addEventListener('load', () => {
+        if ('Notification' in window && Notification.permission === 'granted') {
+            pollingAtivo = true;
+            document.getElementById('btn-notif').innerHTML   = '<i class="fas fa-bell"></i> NOTIFICAÇÕES ATIVAS';
+            document.getElementById('btn-notif').classList.add('ativo');
+            document.getElementById('notif-status').innerHTML = '✅ <strong>Notificações ativas!</strong> Você receberá alertas de novos agendamentos.';
+            iniciarPolling();
+        }
     });
 </script>
 {% endif %}
