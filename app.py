@@ -64,7 +64,7 @@ def admin_required(f):
 
 
 # =====================================================
-# ROTAS PÚBLICAS — INALTERADAS
+# ROTAS PÚBLICAS
 # =====================================================
 
 @app.route('/')
@@ -161,6 +161,7 @@ def agendar():
                              f'Escolha outro horário ou profissional.'
                 }), 409
 
+        # Salva agendamentos
         for servico in servicos:
             supabase.table('agendamentos').insert({
                 'cliente':           cliente,
@@ -172,17 +173,16 @@ def agendar():
                 'profissional_nome': profissional_nome
             }).execute()
 
-        # Salva dados do agendamento para notificação
-        agendamento_notif = {
-            'cliente': cliente,
+        # Salva notificação no banco para o polling
+        servicos_str = ', '.join(servicos)
+        supabase.table('notificacoes').insert({
+            'cliente':      cliente,
             'profissional': profissional_nome,
-            'data': data,
-            'horario': horario,
-            'servicos': servicos,
-            'total': float(total)
-        }
-        app.config['ULTIMO_AGENDAMENTO'] = agendamento_notif
-        app.config['AGENDAMENTO_ID'] = app.config.get('AGENDAMENTO_ID', 0) + 1
+            'data':         data,
+            'horario':      horario,
+            'servicos':     servicos_str,
+            'total':        float(total)
+        }).execute()
 
         return jsonify({'success': True})
     except Exception as e:
@@ -221,27 +221,53 @@ def admin_fazer_login():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/admin/checar-agendamento', methods=['GET'])
-@admin_required
-def admin_checar_agendamento():
-    """Retorna o último agendamento novo para notificação por polling."""
-    ultimo_id   = int(request.args.get('ultimo_id', 0))
-    atual_id    = app.config.get('AGENDAMENTO_ID', 0)
-    if atual_id > ultimo_id:
-        return jsonify({
-            'novo': True,
-            'id': atual_id,
-            'dados': app.config.get('ULTIMO_AGENDAMENTO', {})
-        })
-    return jsonify({'novo': False, 'id': atual_id})
-
-
 @app.route('/admin/painel', methods=['GET'])
 def admin_painel():
     token = request.args.get('token', '')
     if token != ADMIN_TOKEN:
         return redirect(url_for('admin_login'))
     return render_template('admin.html', pagina='painel', token=token)
+
+
+@app.route('/admin/checar-notificacao', methods=['GET'])
+@admin_required
+def admin_checar_notificacao():
+    """Retorna notificações novas baseado no último ID visto."""
+    ultimo_id = int(request.args.get('ultimo_id', 0))
+    try:
+        resp = supabase.table('notificacoes') \
+            .select('*') \
+            .gt('id', ultimo_id) \
+            .order('id') \
+            .limit(1) \
+            .execute()
+
+        if resp.data:
+            n = resp.data[0]
+            return jsonify({
+                'novo': True,
+                'id':   n['id'],
+                'dados': {
+                    'cliente':      n['cliente'],
+                    'profissional': n['profissional'],
+                    'data':         str(n['data']),
+                    'horario':      str(n['horario'])[:5],
+                    'servicos':     n['servicos'],
+                    'total':        float(n['total'] or 0)
+                }
+            })
+
+        # Retorna o ID mais alto atual
+        resp2 = supabase.table('notificacoes') \
+            .select('id') \
+            .order('id', desc=True) \
+            .limit(1) \
+            .execute()
+        atual_id = resp2.data[0]['id'] if resp2.data else 0
+
+        return jsonify({'novo': False, 'id': atual_id})
+    except Exception as e:
+        return jsonify({'novo': False, 'id': ultimo_id, 'error': str(e)})
 
 
 @app.route('/admin/agendamentos', methods=['GET'])
