@@ -892,7 +892,7 @@ _Agendamento confirmado pelo PJ Agende Pro_ ⭐`;
 
             // Abre WhatsApp — usa href para funcionar no celular e no PC
             const urlWpp = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
-            window.location.href = urlWpp;
+            window.open(urlWpp, '_blank');
             mostrarConfirmacao(nome, profSelecionado.nome, data, horarioSelecionado, selecionados, total.toFixed(2).replace('.',','));
 
         } catch(e) {
