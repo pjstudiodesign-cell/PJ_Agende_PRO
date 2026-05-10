@@ -767,7 +767,7 @@ async function fazerLogin() {
 
     function iniciarPolling() {
         // Pega o ID atual para não notificar agendamentos antigos
-        fetch('/admin/checar-agendamento?ultimo_id=0', { headers: H })
+        fetch('/admin/checar-notificacao?ultimo_id=0', { headers: H })
             .then(r => r.json())
             .then(d => { ultimoAgendamentoId = d.id; });
 
@@ -777,7 +777,7 @@ async function fazerLogin() {
 
     async function verificarNovoAgendamento() {
         try {
-            const res  = await fetch('/admin/checar-agendamento?ultimo_id=' + ultimoAgendamentoId, { headers: H });
+            const res  = await fetch('/admin/checar-notificacao?ultimo_id=' + ultimoAgendamentoId, { headers: H });
             const dados = await res.json();
 
             if (dados.novo) {
