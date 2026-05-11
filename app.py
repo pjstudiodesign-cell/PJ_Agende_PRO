@@ -1,4 +1,5 @@
 import os
+import requests
 from flask import Flask, render_template, send_from_directory, request, jsonify, redirect, url_for
 from supabase import create_client, Client
 from datetime import datetime, timedelta
@@ -6,9 +7,13 @@ from functools import wraps
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
-SUPABASE_URL  = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY  = os.environ.get("SUPABASE_KEY")
-ADMIN_TOKEN   = os.environ.get("ADMIN_TOKEN", "pjstudio2024token")
+SUPABASE_URL      = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY      = os.environ.get("SUPABASE_KEY")
+ADMIN_TOKEN       = os.environ.get("ADMIN_TOKEN", "pjstudio2024token")
+ULTRAMSG_INSTANCE = os.environ.get("ULTRAMSG_INSTANCE", "instance174522")
+ULTRAMSG_TOKEN    = os.environ.get("ULTRAMSG_TOKEN", "y969oc7m8365o8nn")
+WHATSAPP_DONO     = os.environ.get("WHATSAPP_DONO", "5524981196037")
+
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # =====================================================
@@ -47,6 +52,23 @@ def get_slots_bloqueados(horario_inicio_str, duracao_minutos):
         inicio += timedelta(minutes=30)
         elapsed += 30
     return slots
+
+
+def enviar_whatsapp(numero, mensagem):
+    """Envia mensagem automática via UltraMsg."""
+    try:
+        url  = f"https://api.ultramsg.com/{ULTRAMSG_INSTANCE}/messages/chat"
+        payload = {
+            "token":   ULTRAMSG_TOKEN,
+            "to":      numero,
+            "body":    mensagem,
+            "priority": 1
+        }
+        resp = requests.post(url, data=payload, timeout=10)
+        return resp.status_code == 200
+    except Exception as e:
+        print(f"Erro UltraMsg: {e}")
+        return False
 
 
 def token_valido():
@@ -173,7 +195,7 @@ def agendar():
                 'profissional_nome': profissional_nome
             }).execute()
 
-        # Salva notificação no banco para o polling
+        # Salva notificação no banco
         servicos_str = ', '.join(servicos)
         supabase.table('notificacoes').insert({
             'cliente':      cliente,
@@ -183,6 +205,24 @@ def agendar():
             'servicos':     servicos_str,
             'total':        float(total)
         }).execute()
+
+        # Monta e envia mensagem automática para o dono
+        partes = data.split('-')
+        data_fmt = f"{partes[2]}/{partes[1]}/{partes[0]}" if len(partes) == 3 else data
+        servicos_lista = '\n'.join([f"  • {s}" for s in servicos])
+
+        mensagem = (
+            f"🗓️ *NOVO AGENDAMENTO - PJ STUDIO*\n\n"
+            f"👤 *Cliente:* {cliente}\n"
+            f"💼 *Profissional:* {profissional_nome}\n"
+            f"📅 *Data:* {data_fmt}\n"
+            f"🕐 *Horário:* {horario[:5]}\n\n"
+            f"✨ *Serviços:*\n{servicos_lista}\n\n"
+            f"💰 *Total:* R$ {float(total):.2f}\n\n"
+            f"_Agendamento confirmado pelo PJ Agende Pro_ ⭐"
+        )
+
+        enviar_whatsapp(WHATSAPP_DONO, mensagem)
 
         return jsonify({'success': True})
     except Exception as e:
@@ -232,7 +272,6 @@ def admin_painel():
 @app.route('/admin/checar-notificacao', methods=['GET'])
 @admin_required
 def admin_checar_notificacao():
-    """Retorna notificações novas baseado no último ID visto."""
     ultimo_id = int(request.args.get('ultimo_id', 0))
     try:
         resp = supabase.table('notificacoes') \
@@ -257,7 +296,6 @@ def admin_checar_notificacao():
                 }
             })
 
-        # Retorna o ID mais alto atual
         resp2 = supabase.table('notificacoes') \
             .select('id') \
             .order('id', desc=True) \
