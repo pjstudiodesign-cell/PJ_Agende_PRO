@@ -157,6 +157,7 @@ def agendar():
     total             = dados.get('total')
     profissional_id   = dados.get('profissional_id')
     profissional_nome = dados.get('profissional_nome')
+    telefone_cliente  = dados.get('telefone', '')
 
     if not all([cliente, servicos, data, horario, profissional_id]):
         return jsonify({'error': 'Campos obrigatórios faltando'}), 400
@@ -223,6 +224,22 @@ def agendar():
         )
 
         enviar_whatsapp(WHATSAPP_DONO, mensagem)
+
+        # Envia confirmação automática para o cliente
+        if telefone_cliente:
+            numero_cliente = '55' + telefone_cliente if not telefone_cliente.startswith('55') else telefone_cliente
+            confirmacao = (
+                f"✅ *AGENDAMENTO CONFIRMADO!*\n\n"
+                f"Olá {cliente}! Seu agendamento foi recebido com sucesso!\n\n"
+                f"📅 *Data:* {data_fmt}\n"
+                f"🕐 *Horário:* {horario[:5]}\n"
+                f"💼 *Profissional:* {profissional_nome}\n"
+                f"✨ *Serviços:* {servicos_str}\n\n"
+                f"💰 *Total:* R$ {float(total):.2f}\n\n"
+                f"Em breve entraremos em contato se necessário.\n"
+                f"_PJ Studio — Obrigado pela preferência!_ ⭐"
+            )
+            enviar_whatsapp(numero_cliente, confirmacao)
 
         return jsonify({'success': True})
     except Exception as e:
