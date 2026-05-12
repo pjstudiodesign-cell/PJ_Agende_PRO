@@ -566,6 +566,9 @@
             <label><i class="fas fa-user"></i> Seu Nome Completo</label>
             <input type="text" id="input-nome" placeholder="Ex: João Silva">
 
+            <label><i class="fas fa-mobile-alt"></i> Seu WhatsApp (com DDD)</label>
+            <input type="tel" id="input-telefone" placeholder="Ex: 24999998888" maxlength="13">
+
             <button class="btn-proximo" onclick="irStep2()">
                 PRÓXIMO: ESCOLHER PROFISSIONAL →
             </button>
@@ -708,7 +711,9 @@
 
     async function irStep2() {
         const nome = document.getElementById('input-nome').value.trim();
+        const tel  = document.getElementById('input-telefone').value.trim().replace(/\D/g,'');
         if (!nome) { mostrarErro('erro-prof', 'Por favor, informe seu nome!'); return; }
+        if (!tel || tel.length < 10) { mostrarErro('erro-prof', 'Por favor, informe seu WhatsApp com DDD!'); return; }
 
         setStep(2);
 
@@ -850,6 +855,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     cliente:           nome,
+                    telefone:          document.getElementById('input-telefone').value.trim().replace(/\D/g,''),
                     servicos:          selecionados.map(s => s.nome),
                     data:              data,
                     horario:           horarioSelecionado,
@@ -890,9 +896,8 @@ ${servicos}
 
 _Agendamento confirmado pelo PJ Agende Pro_ ⭐`;
 
-            // Abre WhatsApp — usa href para funcionar no celular e no PC
-            const urlWpp = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
-            window.open(urlWpp, '_blank');
+            // Agendamento salvo — mensagem automática enviada para o dono
+            // Cliente recebe confirmação automática no WhatsApp dele
             mostrarConfirmacao(nome, profSelecionado.nome, data, horarioSelecionado, selecionados, total.toFixed(2).replace('.',','));
 
         } catch(e) {
